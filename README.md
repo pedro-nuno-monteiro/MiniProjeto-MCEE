@@ -1,7 +1,8 @@
-Projeto MCEE - ANÁLISE DE REFLEXÕES DE SINAIS ATRAVÉS DO MÉTODO DE BERGERON
+#Projeto MCEE - ANÁLISE DE REFLEXÕES DE SINAIS ATRAVÉS DO MÉTODO DE BERGERON
 
-#Descrição-base
-O programa deverá disponibilizar um menu que permita ao utilizador configurar:
+##Descrição-base
+
+###O programa deverá disponibilizar um menu que permita ao utilizador configurar:
     1. Os parâmetros do circuito
         o Tensão e impedância da fonte de alimentação à entrada da linha
         o Impedância da carga
@@ -14,7 +15,7 @@ O programa deverá disponibilizar um menu que permita ao utilizador configurar:
     4. Sair do programa, sendo requerida a confirmação desta operação.
         
     
-Após a execução do Método de Bergeron, devem ser apresenta a seguinte informação ao utilizador:
+###Após a execução do Método de Bergeron, devem ser apresenta a seguinte informação ao utilizador:
     1. Os parâmetros de configuração do modelo.
     2. O diagrama V(I).
     3. Gráfico com as curvas das tensões à saída da fonte e aos terminais da carga.
@@ -22,13 +23,14 @@ Após a execução do Método de Bergeron, devem ser apresenta a seguinte inform
     5. Tabela com os vários valores de tensão e corrente calculados durante a aplicação do método de Bergeron.
     6. Valores de tensão e corrente no ponto de operação do circuito
 
-    Tarefa A
+
+##Tarefa A
 Permitir a possibilidade de definir representações não lineares para a fonte e a carga do circuito. 
 Pode considerar a utilização de funções anónimas para este efeito. 
 Ainda, deve ter em conta que as curvas caraterísticas introduzidas devem garantir
 um ponto de operação, caso contrário o circuito não é viável.
 
-    Tarefa B
+##Tarefa B
 Para além do sinal DC constante, o programa poderá possibilitar a definição de sinais de amplitude variável e duração finita. De entre estes sinais, pode considerar:
     • Um pulso retangular, definido pela sua amplitude, A, e duração,  (Figura 10a).
     • Um pulso digital, definido pela sua amplitude, A, e pelo tempo de subida, tr, tempo de descida, tf, e duração de pulso,  (Figura 10b).

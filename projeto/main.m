@@ -3,24 +3,30 @@ clc;
 
 % projetozinho de matilabi
 
-
 % FICHEIRO PRINCIPAL 
 
+%inicialiar tudinho
+[Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia] = deal(0);
+
+first_time_1 = true;  %será boa ideia usar isto?
+first_time_2 = true;
 opcao = 0;
 while opcao ~= 4
     opcao = menu;
     
     switch opcao
         case 1
-            [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1
+            [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1(first_time_1);
+            first_time = false;
         case 2
-            [n_iteracoes, tolerancia] = opcao_2
+            [n_iteracoes, tolerancia] = opcao_2(first_time_2);
+            first_time_2 = false;
         case 3
-            opcao_3(Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia);
+            opcao_3(Vs, Rs, RL_CC, RL_CA, Td, n_iteracoes, tolerancia);
         case 4
             validate = opcao_4;
             if validate
-                opcao = 4;
+                opcao = 4;  
                 fprintf("\nObrigado! Volte sempre!\n\n\n");
             else
                 opcao = 3;

@@ -42,11 +42,10 @@ Permitir a possibilidade de definir representações não lineares para a fonte 
 
 ### Tarefa B
 Para além do sinal DC constante, o programa poderá possibilitar a definição de sinais de amplitude variável e duração finita. De entre estes sinais, pode considerar:
-
- • Um pulso retangular, definido pela sua amplitude, A, e duração, tau.
- • Um pulso digital, definido pela sua amplitude, A, e pelo tempo de subida, tr, tempo de descida, tf, e duração de pulso, tau.
- • Um pulso triangular, de amplitude A, com tempo de subida, tr, e tempo de descida, tf.
- • Um trem de impulsos, definido pela amplitude dos impulsos, A, a duração dos pulsos, tau, e o período dos pulsos, T
+ - Um pulso retangular, definido pela sua amplitude, A, e duração, tau;
+ - Um pulso digital, definido pela sua amplitude, A, e pelo tempo de subida, tr, tempo de descida, tf, e duração de pulso, tau;
+ - Um pulso triangular, de amplitude A, com tempo de subida, tr, e tempo de descida, tf;
+ - Um trem de impulsos, definido pela amplitude dos impulsos, A, a duração dos pulsos, tau, e o período dos pulsos, T.
 
 ## O método de Bergeron
 
@@ -55,22 +54,22 @@ Para além do sinal DC constante, o programa poderá possibilitar a definição 
 Transmissão de sinais elétricos entre 2 pontos, através de uma linha de transmissão
 
 Circuito: 
-    - fonte (fonte Vs + resistência Rs);
-    - linha de transmissão de comprimento L e com impedância característica Z0;
-    - carga RL (pode ser, por exemplo, a entrada de uma porta lógica).
+ - fonte (fonte Vs + resistência Rs);
+ - linha de transmissão de comprimento L e com impedância característica Z0;
+ - carga RL (pode ser, por exemplo, a entrada de uma porta lógica).
 
 Com a linha de transmissão, o sinal elétrico pode ser afetado pelas grandes velocidades:
-    - sofre um atraso de tempo, Td (por causa da tal velocidade, u), tal que Td = L / u;
+ - sofre um atraso de tempo, Td (por causa da tal velocidade, u), tal que Td = L / u;
 
 Há ainda a impedância característica, Z0, que pode afetar o sinal se for diferente de RL.
 
 O método de Bergeron é uma ferramenta para calcular a tensão e a corrente em qualquer ponto da linha de transmissão para se poder fazer a análise dos tempos de propagação do sinal:
-    - v(z, t) = v+ * (z - vt) + v- * (z + ut);
-    - i(z, t) = v(z, t) / Z0.   [LEI DE OHM].
-    - v+ a onda que viaja no sentido positivo dos zz (da fonte para a carga) (onda incidente);
-    - v- a do sentido negativo (onda refletida);
-    - u a velocidade de propagação, onde u = 1 / (LC)^1/2;
-    - Z0 = (L/C)^1/2.
+ - v(z, t) = v+ * (z - vt) + v- * (z + ut);
+ - i(z, t) = v(z, t) / Z0.   [LEI DE OHM].
+ - v+ a onda que viaja no sentido positivo dos zz (da fonte para a carga) (onda incidente);
+ - v- a do sentido negativo (onda refletida);
+ - u a velocidade de propagação, onde u = 1 / (LC)^1/2;
+ - Z0 = (L/C)^1/2.
 
 Num gráfico tensão corrente, se for onda incidente, o declive é -Z0. Numa refletida, o declive é +Z0.
 

@@ -1,6 +1,15 @@
-function x = opcao_3
+function x = opcao_3(Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia)
 
 % função que é executada quando é escolhida
 % a 3a opção do menu
 
-fprintf("************** Método de Bergeron ******************\n");
+fprintf("************** Método de Bergeron **************\n");
+fprintf("\n\t Configuração definida: ");
+fprintf("\n\t\t Vs = %d V\tRs = %d \ohms", Vs, Rs);
+fprintf("\n\t\t RL_CC = %d \ohms\t RL_CA = %d\ohms", RL_CC, RL_CA);
+fprintf("\n\t\t Td = %f s", Td);
+fprintf("\n\t\t Número iterações = %d", n_iteracoes);
+fprintf("\n\t\t Tolerância = %f", tolerancia);
+fprintf("************************************************\n");
+
+end

@@ -1,5 +1,5 @@
 clear;
-clc;
+%clc;
 
 % projetozinho de matilabi
 
@@ -16,12 +16,12 @@ while opcao ~= 4
         case 2
             [n_iteracoes, tolerancia] = opcao_2
         case 3
-            opcao_3(Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia);
+            opcao_3;
         case 4
             validate = opcao_4;
             if validate
                 opcao = 4;
-                fprintf("\nObrigado! Volte sempre!\n\n\n");
+                fprintf("Obrigado! Volte sempre!")
             else
                 opcao = 3;
             end

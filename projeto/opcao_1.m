@@ -4,7 +4,13 @@ function [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1
 
 clc;
 opcao = 0;
-
+Vs = 0;
+Rs = 0;
+RL_CC = 0;
+RL_CA = 0;
+Td = 0;
+L = 0;
+v = 0;
 while opcao ~= 7
     clc;
     opcao = 0;
@@ -44,7 +50,7 @@ while opcao ~= 7
         case 6
             [L, v] = input('L (m), v (m/s) = ');
         case 7
-            menu;   %para menu ou para main? ver isto mais tarde...!
+            break;
         otherwise
             fprintf("erro?");
     end

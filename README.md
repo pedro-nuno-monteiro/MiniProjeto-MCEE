@@ -7,7 +7,7 @@
  - Apresentar o gráfico com o diagrama de BERGERON, as curvas de tensão e corrente da fonte e da carga.
  - Apresentar também o valor da tensão e corrente no ponto de operação e uma tabela(s) com os valores em cada iteração.
 
-
+fiz esta alteração
 ## Descrição-base:
 
 ### O programa deverá disponibilizar um menu que permita ao utilizador configurar:

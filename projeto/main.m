@@ -17,7 +17,7 @@ while opcao ~= 4
     switch opcao
         case 1
             [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1(first_time_1);
-            first_time = false;
+            first_time_1 = false;
         case 2
             [n_iteracoes, tolerancia] = opcao_2(first_time_2);
             first_time_2 = false;

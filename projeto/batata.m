@@ -1,6 +1,7 @@
 clc; clear; close all;
 
 Vs = 75; Rs = 100; RL_CC = 200; Td = 2e-3; Z0=50;
+%Vs=24; Rs=5; RL_CC=25; Z0=100; Td=5e-3;
 
 n_iteracoes=3;
 
@@ -23,6 +24,12 @@ plot(x, carga_y, 'b', 'LineWidth', 2); grid on;
 
 y= carga_y - fonte_y;
 zer = find(y==0);
+if isempty(zer)
+            disp('FDS');
+            y=round(y, 1);
+            zer=find(y==0);
+            zer=zer(1);
+        end
 
 P=[zer*I/(10000), carga_y(zer)]
 
@@ -35,7 +42,6 @@ xlabel('Corrente (A)'); ylabel('Tensao (V)');
 %% Tensao na fonte e carga
 
 ponto_i = [0 0];
-
 for k=0:n_iteracoes
 
     if mod(k, 2) == 0
@@ -50,11 +56,12 @@ for k=0:n_iteracoes
             zer1=find(aux==0);
             zer1=zer1(1);
         end
-        plot(x, y1, 'k--'); hold on;
+        
         ponto_i=[zer1*I/10000, y1(zer1)]
+        plot(x, y1, 'k--'); hold on;
         plot(ponto_i(1), ponto_i(2), 'o', 'MarkerFaceColor','y');
         
-
+    
     else
         b=ponto_i(2) + Z0*ponto_i(1)
         y2=-Z0*x + b;

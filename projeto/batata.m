@@ -7,55 +7,71 @@ n_iteracoes=3;
 %% Fonte
 
 I=Vs/Rs;
-fonte_x = linspace(0, I, 10000);
+x = linspace(0, I, 10000);
+fonte_y= Vs - Rs * x;
+plot(x, fonte_y, 'r', 'LineWidth', 2); hold on;
 
-fonte_y= Vs - Rs * fonte_x;
-plot(fonte_x, fonte_y, 'r', 'LineWidth', 2); hold on;
-
-%fonte_x = [I 0]; fonte_y = [0 Vs]; plot(fonte_x, fonte_y, 'r', 'LineWidth',2); hold on;
 
 %% Carga
 
-carga_x = linspace(0, I, 10000);
-
-carga_y = RL_CC * carga_x;
-
-plot(carga_x, carga_y, 'b', 'LineWidth', 2); grid on;
+carga_y = RL_CC * x;
+plot(x, carga_y, 'b', 'LineWidth', 2); grid on;
 
 %% Ponto de operaçao
 
-P=intersection(carga_y, fonte_y, I, 10000)
+
+
+y= carga_y - fonte_y;
+zer = find(y==0);
+
+P=[zer*I/(10000), carga_y(zer)]
 
 plot(P(1), P(2), 'o', 'MarkerFaceColor','k');
 
 xlabel('Corrente (A)'); ylabel('Tensao (V)');
-legend('Fonte', 'Carga', 'Ponto de operacao', 'Location','best');
+%legend('Fonte', 'Carga', 'Ponto de operacao', 'Location','best');
 
 
 %% Tensao na fonte e carga
 
 ponto_i = [0 0];
 
-x=linspace(0, I, 10000);
-
 for k=0:n_iteracoes
 
     if mod(k, 2) == 0
-        b=ponto_i(2) - Z0*ponto_i(1);
-        y= Z0*x + b;
-        disp('merda');
-        plot(x, y, 'k--'); hold on;
-        ponto_i=intersection(y, fonte_y, I, 10000)
+        b=ponto_i(2) - Z0*ponto_i(1)
+        y1= Z0*x + b; 
+        
+        aux=fonte_y-y1;
+        zer1=find(aux==0);
+        if isempty(zer1)
+            disp('FDS');
+            aux=round(aux, 1);
+            zer1=find(aux==0);
+            zer1=zer1(1);
+        end
+        plot(x, y1, 'k--'); hold on;
+        ponto_i=[zer1*I/10000, y1(zer1)]
+        plot(ponto_i(1), ponto_i(2), 'o', 'MarkerFaceColor','y');
+        
+
     else
         b=ponto_i(2) + Z0*ponto_i(1)
-        y=-Z0*x + b;
-        disp('merda2');
-        plot(x, y, 'k--'); hold on;
-        ponto_i=intersection(y, carga_y, I, 10000)
+        y2=-Z0*x + b;
+        plot(x, y2, 'k--'); hold on;
+        aux= y2 - carga_y;
+        zer1=find(aux==0)
+        
+        if isempty(zer1)
+            disp('FDS');
+            aux=round(aux, 1);
+            zer1=find(aux==0);
+            zer1=zer1(1);
+        end
+
+        ponto_i=[zer1*I/10000, y2(zer1)]
+        plot(ponto_i(1), ponto_i(2), 'o', 'MarkerFaceColor','y');
     end
-
-    
-
 end
 
 hold off;

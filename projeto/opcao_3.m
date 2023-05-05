@@ -50,7 +50,7 @@ fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
 fprintf("\n************************************\n");
 
 % fonte + carga
-figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off');
+figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off', 'ToolBar', 'none', 'MenuBar', 'none');
 I = Vs/Rs;
 x = linspace(0, I, 10000);
 f = @(x) Vs - Rs .* x;

@@ -33,32 +33,25 @@ xlabel('Corrente (A)'); ylabel('Tensao (V)');
 ponto_i = [0 0];
 zer_x = 0;
 zer_y= 0;
-
-pontos_x = zeros(1, n_iteracoes);
-pontos_y = zeros(1, n_iteracoes);
-
-for k = 0:n_iteracoes
+zer_x_anterior = 0;
+zer_y_anterior = 0;
+for k=0:n_iteracoes
 
     if mod(k, 2) == 0
         b = zer_y - Z0 * zer_x;
         y1 = @(x) Z0.*x + b;
         
-        pontos_x(k + 1) = zer_x;
-        pontos_y(k + 1) = zer_y;
-
         zer_x = fzero(@(x) f(x) - y1(x), 1);
         zer_y = y1(zer_x);
 
         plot(x, y1(x), 'k--'); hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
         
+    
     else
         b = zer_y + Z0 * zer_x;
         y2 = @(x) -Z0.*x + b;
-
-        pontos_x(k + 1) = zer_x;
-        pontos_y(k + 1) = zer_y;
-
+        
         zer_x = fzero(@(x) c(x) - y2(x), 1);
         zer_y = y2(zer_x);
         

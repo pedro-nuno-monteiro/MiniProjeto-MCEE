@@ -63,6 +63,14 @@ while opcao ~= 7
             [L_p, v_p] = input('L (m), v (m/s) = ');
             Td_p = L_p / v_p;
         case 7
+            % caso o user saia quando entra na função pela 1a vez
+            Vs = Vs_p;
+            Rs = Rs_p;
+            RL_CC = RL_CC_p;
+            RL_CA = RL_CA_p;
+            Td = Td_p;
+            L = L_p;
+            v = v_p;
             break;
         otherwise
             fprintf("erro?");

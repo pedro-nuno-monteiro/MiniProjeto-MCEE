@@ -36,6 +36,9 @@ while opcao ~= 4
         case 3
             tolerancia_p = 10;    %não faço ideia que valor colocar ainda
         case 4
+            % caso o user saia quando entra na função pela 1a vez
+            n_iteracoes = n_iteracoes_p;
+            tolerancia = tolerancia_p;
             break;
         otherwise
             fprintf("erro?");

@@ -41,12 +41,11 @@ end
 clc;
 fprintf("\n************************************\n");
 fprintf("\n\t Configuração definida: \n");
-fprintf("\n\t Vs \t\t\t\t %d V", Vs);
-fprintf("\n\t Rs \t\t\t\t %d %c", Rs, char(216));
-fprintf("\n\t RL_CC \t\t\t\t %d %c", RL_CC, char(216));
-fprintf("\n\t Td \t\t\t\t %f s", Td);
-fprintf("\n\t Número iterações \t %d", n_iteracoes);
-fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
+fprintf("\n\t\t Vs = %d V\tRs = %d", Vs, Rs);
+fprintf("\n\t\t RL_CC = %d", RL_CC);
+fprintf("\n\t\t Td = %f s", Td);
+fprintf("\n\t\t Número iterações = %d", n_iteracoes);
+fprintf("\n\t\t Tolerância = %f\n", tolerancia);
 fprintf("\n************************************\n");
 
 % fonte + carga

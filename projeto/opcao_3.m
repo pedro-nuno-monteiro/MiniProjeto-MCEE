@@ -29,18 +29,47 @@ if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || n_iteracoes == 0  %não fun
     if opcao == 1
         return
     else
-        Vs = 75;
-        Rs = 100;
-        RL_CC = 200;
-        Td_ma = 2e-3;
-        n_iteracoes = 4;
-        tolerancia = 0.005;
+        clc;
+        opcao = 0;
+        fprintf("\n******************** Método de Bergeron ********************\n");
+        fprintf("\n\tQual das configurações pretende utilizar?");
+        fprintf("\n\n\t\t Opção 1:");
+        fprintf("\n\t\t\t\tVs = 75"); fprintf("\n\t\t\t\tRs = 100"); fprintf("\n\t\t\t\tRL = 200");
+        fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
+        fprintf("\n\t\t\t\tTolerância = 0.005");
+        
+        fprintf("\n\n\t\t Opção 2:");
+        fprintf("\n\t\t\t\tVs = 24"); fprintf("\n\t\t\t\tRs = 200"); fprintf("\n\t\t\t\tRL = 100");
+        fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
+        fprintf("\n\t\t\t\tTolerância = 0.005\n");
+        fprintf("\n************************************************************")
+
+        while opcao < 1 || opcao > 2
+            opcao = input("\n\t Opção escolhida: ");
+        end
+        
+        if opcao == 1
+            Vs = 75;
+            Rs = 100;
+            RL_CC = 200;
+            Td_ma = 2e-3;
+            n_iteracoes = 4;
+            tolerancia = 0.005;
+        else
+            Vs = 24; 
+            Rs = 5; 
+            RL_CC = 25; 
+            Z0 = 100; 
+            Td_ma = 5e-3; 
+            tolerancia = -20; 
+            n_iteracoes = 10;
+        end
     end
 end
 
 % ponto 1
 clc;
-fprintf("\n************************************\n");
+fprintf("\n******************** Método de Bergeron *******************\n");
 fprintf("\n\t Configuração definida: \n");
 fprintf("\n\t Vs \t\t\t\t %d V", Vs);
 fprintf("\n\t Rs \t\t\t\t %d %c", Rs, char(216));
@@ -48,7 +77,7 @@ fprintf("\n\t RL_CC \t\t\t\t %d %c", RL_CC, char(216));
 fprintf("\n\t Td \t\t\t\t %f s", Td_ma);
 fprintf("\n\t Número iterações \t %d", n_iteracoes);
 fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
-fprintf("\n************************************\n");
+fprintf("\n***********************************************************\n");
 
 % fonte + carga
 figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off', 'ToolBar', 'none', 'MenuBar', 'none');
@@ -125,6 +154,11 @@ for k = 0:n_iteracoes
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
     end
+    if I > 4 * zer_x
+        ylim([0 Vs+1]); xlim([0 2*zer_x]);
+    else
+        ylim([0 Vs+1]); xlim([0 I]);
+    end
 end
 hold off;
 
@@ -135,10 +169,10 @@ if ~terminado
     x_tensao_fonte = 0 : 2*Td : n_iteracoes*Td;
     x_tensao_carga = [0, Td : 2*Td : n_iteracoes*Td - Td, n_iteracoes*Td];
     
-    va = zeros(1, round(n_iteracoes/2+2));
+    va = zeros(1, round(n_iteracoes/2+2));  %tensão na carga
     aux_va = 0;
     
-    vb = zeros(1, round(n_iteracoes/2+1));
+    vb = zeros(1, round(n_iteracoes/2+1));  %tensão na fonte
     aux_vb = 0;
     
     for k = 0:n_iteracoes
@@ -156,13 +190,31 @@ if ~terminado
     vb(end) = vb(end-1);
     
     subplot(2, 4, [3 8]);
-    stairs(x_tensao_fonte, vb, LineWidth = 2);
+    stairs(x_tensao_fonte, vb, 'r', LineWidth = 2);
     hold on;
-    stairs(x_tensao_carga, va, 'LineWidth',2);
+    stairs(x_tensao_carga, va, 'b', LineWidth = 2);
     ylim([0 Vs+1]); xlim([0 n_iteracoes*Td]);
-    legend('vb', 'va', 'Location', 'best');
+    legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;
     hold off;
 end
-pause(10);
+
+fprintf("\n\tTabela dos valores da tensão:\n");
+fprintf("\n\tIteração\t\tTempo\t\tTensão\t\t   Corrente");
+for k = 0:n_iteracoes
+    tempo = Td * k;
+    fprintf("\n\t%d\t\t\t\t%2.2d s\t\t%2.3f V \t\t%2.3f A", k + 1, tempo, pontos_y(k + 1), pontos_x(k + 1));
+end
+
+fprintf("\n\n***********************************************************\n");
+fprintf("\t\nPonto de Operação:");
+fprintf("\n\n\t\tV = %0.3f V", zero_x);
+fprintf("\n\n\t\tI = %0.3f A", zero_y);
+fprintf("\n\n***********************************************************\n");
+
+fprintf(" Prima 1 - Voltar ao menu principal");
+opcao = 0;
+while opcao ~= 1
+    opcao = input("\nOpção escolhida: ");
+end
 end

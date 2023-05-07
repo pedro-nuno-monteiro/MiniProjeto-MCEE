@@ -12,7 +12,7 @@ fprintf("\n\t Prima 3 - Executar Método de Bergeron");
 fprintf("\n\t Prima 4 - Sair do programa\n\n");
 fprintf("************************************************");
 
-while opcao < 1 || opcao > 4 
+while opcao < 1 || opcao > 4 || ~isscalar(opcao)
     opcao = input("\n\n\t Opção Escolhida: ");
 end
 end

@@ -6,7 +6,7 @@ clc;
 % FICHEIRO PRINCIPAL 
 
 %inicialiar tudinho
-[Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia] = deal(0);
+[Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia, Z0] = deal(0);
 
 first_time_1 = true;  %será boa ideia usar isto?
 first_time_2 = true;

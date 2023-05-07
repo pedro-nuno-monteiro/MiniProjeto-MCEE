@@ -216,7 +216,7 @@ if ~terminado
     stairs(x_corrente_fonte, ib, 'r', LineWidth = 2);
     hold on;
     stairs(x_corrente_carga, ia, 'b', LineWidth = 2);
-    ylim([0 1]); xlim([0 n_iteracoes*Td]);
+    ylim([0 ]); xlim([0 n_iteracoes*Td]);
     legend('Corrente na fonte', 'Corrente na carga', 'Location', 'best');
     grid on;
     hold off;

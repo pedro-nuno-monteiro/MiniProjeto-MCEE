@@ -1,4 +1,4 @@
-function [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1(first_time)
+function [Vs, Rs, RL_CC, RL_CA, Td, Z0, L, v] = opcao_1(first_time)
 % função que é executada quando é escolhida
 % a 1a opção do menu
 
@@ -9,7 +9,7 @@ clc;
 
 %outra opção é fazer este código na função main, assim os valores ficam lá
 %sempre :)
-persistent Vs_p Rs_p RL_CC_p RL_CA_p Td_p L_p v_p;
+persistent Vs_p Rs_p RL_CC_p RL_CA_p Td_p Z0_p L_p v_p;
 
 %inicialiar variáveis na 1a vez que corre
 if first_time
@@ -18,6 +18,7 @@ if first_time
     RL_CC_p = 0;
     RL_CA_p = 0;
     Td_p = 0;
+    Z0_p = 0;
     L_p = 0;
     v_p = 0;
 end
@@ -37,12 +38,13 @@ while opcao ~= 7
     
     fprintf("\n\t Linha de Transmissão:\n");
     fprintf("\n\t\t Prima 5 - Definir tempo de propagação | Td = %d", Td_p);
-    fprintf("\n\t\t Prima 6 - ou definir comprimento e velocidade de propagação | L = %d | v = %d\n", L_p, v_p);
+    fprintf("\n\t\t Prima 6 - Definir impedância de linha | Z0 = %d", Z0_p);
+    fprintf("\n\t\t Prima 7 - ou definir comprimento e velocidade de propagação | L = %d | v = %d\n", L_p, v_p);
 
-    fprintf("\n\t Prima 7 - Voltar ao Menu Principal\n\n")
+    fprintf("\n\t Prima 8 - Voltar ao Menu Principal\n\n")
     fprintf("******************************************************************");
     
-    while opcao < 1 || opcao > 7
+    while opcao < 1 || opcao > 8
         opcao = input('\n\n \t Opção Escolhida: ');
     end
     
@@ -60,15 +62,18 @@ while opcao ~= 7
         case 5
             Td_p = input('Td (s) = ');
         case 6
+            Z0_p = input('Z0 (\ohms) = ');
+        case 7
             [L_p, v_p] = input('L (m), v (m/s) = ');
             Td_p = L_p / v_p;
-        case 7
+        case 8
             % caso o user saia quando entra na função pela 1a vez
             Vs = Vs_p;
             Rs = Rs_p;
             RL_CC = RL_CC_p;
             RL_CA = RL_CA_p;
             Td = Td_p;
+            Z0 = Z0_p;
             L = L_p;
             v = v_p;
             break;
@@ -82,6 +87,7 @@ while opcao ~= 7
     RL_CC = RL_CC_p;
     RL_CA = RL_CA_p;
     Td = Td_p;
+    Z0 = Z0_p;
     L = L_p;
     v = v_p;
 

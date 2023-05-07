@@ -16,13 +16,13 @@ while opcao ~= 4
     
     switch opcao
         case 1
-            [Vs, Rs, RL_CC, RL_CA, Td, L, v] = opcao_1(first_time_1);
+            [Vs, Rs, RL_CC, RL_CA, Td, Z0, L, v] = opcao_1(first_time_1);
             first_time_1 = false;
         case 2
             [n_iteracoes, tolerancia] = opcao_2(first_time_2);
             first_time_2 = false;
         case 3
-            opcao_3(Vs, Rs, RL_CC, RL_CA, Td, n_iteracoes, tolerancia);
+            opcao_3(Vs, Rs, RL_CC, RL_CA, Z0, Td, n_iteracoes, tolerancia);
         case 4
             validate = opcao_4;
             if validate

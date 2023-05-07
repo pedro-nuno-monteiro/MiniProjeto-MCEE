@@ -1,6 +1,5 @@
-function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, n_iteracoes, tolerancia)
+function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, Z0, n_iteracoes, tolerancia)
 
-Z0 = 50;    %não esquecer de pedir isto ao user (ou calcular?)
 % função que é executada quando é escolhida
 % a 3a opção do menu
 
@@ -14,7 +13,7 @@ Z0 = 50;    %não esquecer de pedir isto ao user (ou calcular?)
 clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
 
-if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || n_iteracoes == 0  %não funciona se usar isempty()
+if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0  %não funciona se usar isempty()
     fprintf("\n\tAinda não acabou de definir a configuração do circuito.");
     fprintf("\n\tEscolha uma das seguintes opções:");
     fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
@@ -35,12 +34,12 @@ if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || n_iteracoes == 0  %não fun
         fprintf("\n\tQual das configurações pretende utilizar?");
         fprintf("\n\n\t\t Opção 1:");
         fprintf("\n\t\t\t\tVs = 75"); fprintf("\n\t\t\t\tRs = 100"); fprintf("\n\t\t\t\tRL = 200");
-        fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
+        fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
         fprintf("\n\t\t\t\tTolerância = 0.005");
         
         fprintf("\n\n\t\t Opção 2:");
         fprintf("\n\t\t\t\tVs = 24"); fprintf("\n\t\t\t\tRs = 200"); fprintf("\n\t\t\t\tRL = 100");
-        fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
+        fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tZ0 = 50"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
         fprintf("\n\t\t\t\tTolerância = 0.005\n");
         fprintf("\n************************************************************")
 
@@ -53,6 +52,7 @@ if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || n_iteracoes == 0  %não fun
             Rs = 100;
             RL_CC = 200;
             Td_ma = 2e-3;
+            Z0 = 50;
             n_iteracoes = 4;
             tolerancia = 0.005;
         else
@@ -75,6 +75,7 @@ fprintf("\n\t Vs \t\t\t\t %d V", Vs);
 fprintf("\n\t Rs \t\t\t\t %d %c", Rs, char(216));
 fprintf("\n\t RL_CC \t\t\t\t %d %c", RL_CC, char(216));
 fprintf("\n\t Td \t\t\t\t %f s", Td_ma);
+fprintf("\n\t Z0 \t\t\t\t %f %c", Z0, char(216));
 fprintf("\n\t Número iterações \t %d", n_iteracoes);
 fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
 fprintf("\n***********************************************************\n");

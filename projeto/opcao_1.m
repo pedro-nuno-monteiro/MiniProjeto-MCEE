@@ -40,11 +40,13 @@ while opcao ~= 7
     fprintf("\n\t\t Prima 5 - Definir tempo de propagação | Td = %d", Td_p);
     fprintf("\n\t\t Prima 6 - Definir impedância de linha | Z0 = %d", Z0_p);
     fprintf("\n\t\t Prima 7 - ou definir comprimento e velocidade de propagação | L = %d | v = %d\n", L_p, v_p);
+    
+    fprintf("\n\t\t Prima 8 - Utilizar um dos gráficos da tarefa B");
 
-    fprintf("\n\t Prima 8 - Voltar ao Menu Principal\n\n")
+    fprintf("\n\t Prima 9 - Voltar ao Menu Principal\n\n")
     fprintf("******************************************************************");
     
-    while opcao < 1 || opcao > 8
+    while opcao < 1 || opcao > 9
         opcao = input('\n\n \t Opção Escolhida: ');
     end
     
@@ -67,6 +69,8 @@ while opcao ~= 7
             [L_p, v_p] = input('L (m), v (m/s) = ');
             Td_p = L_p / v_p;
         case 8
+            tarefa_B;
+        case 9
             % caso o user saia quando entra na função pela 1a vez
             Vs = Vs_p;
             Rs = Rs_p;

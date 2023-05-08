@@ -62,7 +62,7 @@ if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0
             Z0 = 100; 
             Td_ma = 5e-3; 
             tolerancia = -20; 
-            n_iteracoes = 10;
+            n_iteracoes = 9;
         end
     end
 end
@@ -86,13 +86,14 @@ I = Vs/Rs;
 x = linspace(0, I, 10000);
 f = @(x) Vs - Rs .* x;
 
-subplot(2, 6, [1 8]);
-plot(x, f(x), 'r', LineWidth = 2);
+subplot(1, 3, 1);
+grafico_fonte = plot(x, f(x), 'r', LineWidth = 2);
 hold on;
 
 c = @(x) RL_CC .* x;
-plot(x, c(x), 'b', LineWidth = 2);
+grafico_carga = plot(x, c(x), 'b', LineWidth = 2);
 grid on;
+title('Diagrama V(I)');
 xlabel('Corrente (A)'); ylabel('Tensão (V)');
 grid on;
 
@@ -100,10 +101,10 @@ grid on;
 zero_x = fzero(@(x) f(x) - c(x), 2);
 zero_y = f(zero_x);
 
-plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
+po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
 
 xlabel('Corrente (A)'); ylabel('Tensao (V)');
-%legend('Fonte', 'Carga', 'Ponto de operação', 'Location','best');
+%legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 
 % tensão na carga + fonte
 zer_x = 0;
@@ -134,7 +135,6 @@ for k = 0:n_iteracoes
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
         
-    
     else
         b = zer_y + Z0 * zer_x;
         y2 = @(x) -Z0.*x + b;
@@ -155,12 +155,14 @@ for k = 0:n_iteracoes
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
     end
+
     if I > 4 * zer_x
         ylim([0 Vs+1]); xlim([0 2*zer_x]);
     else
         ylim([0 Vs+1]); xlim([0 I]);
     end
 end
+legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 hold off;
 
 % gráfico tensão
@@ -170,17 +172,27 @@ if ~terminado
     x_tensao_fonte = 0 : 2*Td : n_iteracoes*Td;
     x_tensao_carga = [0, Td : 2*Td : n_iteracoes*Td - Td, n_iteracoes*Td];
 
-    x_corrente_fonte=x_tensao_fonte;
-    x_corrente_carga=x_tensao_carga;
+    x_corrente_fonte = x_tensao_fonte;
+    x_corrente_carga = x_tensao_carga;
     
-    va = zeros(1, round(n_iteracoes/2+2));  %tensão na carga
-    aux_va = 0;
-    ia = zeros(1, round(n_iteracoes/2+2));  %corrente na carga
-    aux_ia = 0;
+    if mod(n_iteracoes, 2) == 0
+        va = zeros(1, n_iteracoes/2 + 2);  %tensão na carga
+        ia = zeros(1, n_iteracoes/2 + 2);  %corrente na carga
 
-    vb = zeros(1, round(n_iteracoes/2+1));  %tensão na fonte
+        vb = zeros(1, n_iteracoes/2 + 1);  %tensão na fonte
+        ib = zeros(1, n_iteracoes/2 + 1);  %tensão na fonte
+
+    else
+        va = zeros(1, round(n_iteracoes/2) + 1);  %tensão na carga
+        ia = zeros(1, round(n_iteracoes/2) + 1);  %corrente na carga
+
+        vb = zeros(1, round(n_iteracoes/2));  %tensão na fonte
+        ib = zeros(1, round(n_iteracoes/2));  %tensão na fonte
+    end
+
+    aux_va = 0;
+    aux_ia = 0;
     aux_vb = 0;
-    ib = zeros(1, round(n_iteracoes/2+1));  %tensão na fonte
     aux_ib = 0;
     
     for k = 0:n_iteracoes
@@ -203,31 +215,34 @@ if ~terminado
     ia(end) = ia(end-1);
     ib(end) = ib(end-1);
 
-    subplot(2, 6, [3 10]);
+    subplot(1, 3, 2);
     stairs(x_tensao_fonte, vb, 'r', LineWidth = 2);
     hold on;
     stairs(x_tensao_carga, va, 'b', LineWidth = 2);
-    ylim([0 Vs]); xlim([0 n_iteracoes*Td]);
+    xlabel("t(ms)"); ylabel("V");
+    title('Tensão');
+    ylim([0 max(pontos_y) + 1]); xlim([0 n_iteracoes * Td + 2 * Td]);
     legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;
-    hold off;
 
-    subplot(2,6, [5 12]);
+    subplot(1, 3, 3);
     stairs(x_corrente_fonte, ib, 'r', LineWidth = 2);
     hold on;
     stairs(x_corrente_carga, ia, 'b', LineWidth = 2);
-    ylim([0 1]); xlim([0 n_iteracoes*Td]);
+    xlabel("t(ms)"); ylabel("A");
+    title('Corrente');
+    ylim([0 max(pontos_x)]); xlim([0 n_iteracoes* Td + 2 * Td]);
     legend('Corrente na fonte', 'Corrente na carga', 'Location', 'best');
     grid on;
-    hold off;
-
 
 end
+
+hold off;
 
 fprintf("\n\tTabela dos valores da tensão:\n");
 fprintf("\n\tIteração\t\tTempo\t\tTensão\t\t   Corrente");
 for k = 0:n_iteracoes
-    tempo = Td * k;
+    tempo = Td * k - Td;
     fprintf("\n\t%d\t\t\t\t%2.2d s\t\t%2.3f V \t\t%2.3f A", k + 1, tempo, pontos_y(k + 1), pontos_x(k + 1));
 end
 

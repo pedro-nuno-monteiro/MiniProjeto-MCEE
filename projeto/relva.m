@@ -1,0 +1,64 @@
+clc; clear; close all;
+
+dlgtitle='Pulso triangiular';
+perguntas={'Insira a Amplitude: ', 'Insira o tempo de subida: ', 'Insira o tempo de descida: '};
+dims=[1 40];
+definput={'0', '0', '0'};
+
+
+dados=inputdlg(perguntas, dlgtitle, dims, definput);
+dados_num = cellfun(@str2num, dados);
+
+A = dados_num(1);
+ts = dados_num(2) *1e-3;
+td = dados_num(3)*1e-3;
+
+
+%% Grafico do Pulso Triangular
+
+N=10000; %numero de pontos
+
+x=linspace(0, ts + td, N); 
+d=(ts+td)/N; % distancia entre cada ponto
+
+%% Primeiro lado do grafico
+
+x1= 0 : d : ts-d;
+n_pontos_ate_ts=size(x1); % dá uma matriz do tipo [1 1000] logo temos de ir buscar o segundo elemento
+n_pontos_ate_ts=n_pontos_ate_ts(2);
+
+y(1:n_pontos_ate_ts) = x1 .* A/ts; % y=mx onde m=A/ts
+
+
+%% Segundo lado
+
+x2=ts : d : td+ts;
+
+if(size(x2)~=N-n_pontos_ate_ts) % ns porque, mas tenho de colocar este if se nao, às vezes nao dá
+    x2=ts : d : td+ts-d;
+end
+
+y(n_pontos_ate_ts+1:N)= x2.* (-A/td) + A*(1 + ts/td); % y=mx+b onde m=-A/td  e b= A*(1+ts/td)
+                                                      % fiz as contas à mão
+
+
+%% Plot do grafico
+figure(1);
+plot(x.*1e3, y, 'LineWidth',2);
+title('Pulso Triangular');
+
+%% Reta da fonte
+
+Rs=100;
+
+f = @(x) y - Rs .* x;
+figure(2);
+plot(x.*1e3, f(x), 'LineWidth',2);
+title('Reta da fonte');
+
+
+
+
+
+
+

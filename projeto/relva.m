@@ -17,7 +17,7 @@ td = dados_num(3)*1e-3;
 %% Grafico do Pulso Triangular
 
 N=10000; %numero de pontos
-
+a = 2;
 x=linspace(0, ts + td, N); 
 d=(ts+td)/N; % distancia entre cada ponto
 

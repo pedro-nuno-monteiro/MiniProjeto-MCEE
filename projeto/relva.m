@@ -104,3 +104,57 @@ plot(x.*1e3, f(x), 'LineWidth',2);
 title('Reta da fonte');
 hold on;
 RL_CC = 25;
+
+
+
+%% Pulso digital
+
+dlgtitle='Pulso digital';
+perguntas={'Insira a Amplitude: ', 'Insira o tempo de subida: ', 'Insira o tempo de descida: ', 'Duração do pulso: '};
+dims=[1 40];
+definput={'0', '0', '0', '0'};
+
+
+dados=inputdlg(perguntas, dlgtitle, dims, definput);
+dados_num = cellfun(@str2num, dados);
+
+A = dados_num(1);
+ts = dados_num(2) *1e-3;
+td = dados_num(3)*1e-3;
+t_dur=dados_num(4)*1e-3;
+
+% ----------------------------------------------------------------------- %
+N=10000; %numero de pontos
+x=linspace(0, t_dur, N); 
+d=(t_dur)/N;
+% ----------------------------------------------------------------------- %
+
+x1= 0 : d : ts-d;
+tam=size(x1); % dá uma matriz do tipo [1 1000] logo temos de ir buscar o segundo elemento
+pontos_ts=tam(2);
+
+y(1:pontos_ts) = x1 .* A/ts; % y=mx onde m=A/ts
+
+% ----------------------------------------------------------------------- %
+
+x2 = ts : d : t_dur - td -d; 
+tam1=size(x2);
+pontos_tf=tam1(2);
+
+y(pontos_ts+1:pontos_tf+pontos_ts)=A;
+
+% ----------------------------------------------------------------------- %
+
+x3= t_dur - td : d : t_dur - d;
+
+if(size(x3)~=N-pontos_ts-pontos_tf) % ns porque, mas tenho de colocar este if se nao, às vezes nao dá
+    x3=t_dur - td : d : t_dur;
+end
+
+y(pontos_ts + pontos_tf +1 : N) = -A/td.*x3 + A * t_dur /td;
+
+
+plot(x*1e3, y); 
+ylim([0 A+1]);
+
+

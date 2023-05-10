@@ -1,4 +1,4 @@
-function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, Z0, n_iteracoes, tolerancia)
+function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa_B)
 
 % função que é executada quando é escolhida
 % a 3a opção do menu
@@ -6,12 +6,17 @@ function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, Z0, n_iteracoes, tolerancia)
 % apresentar a seguinte info:
 % 1. parâmetros
 % 2. gráfico V(I) - figura 3
-% 3. gráfico da tensão na fonte/carga
+% 3. gráfico da tensão na f3onte/carga
 % 4. gráfico da corrente na fonte/carga
 % 5. tabela com valores de tensão/corrente 
 % 6. tensão e corrente no ponto de operação
 clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
+
+if ir_para_tarefa_B
+    tarefa_B(Rs, RL_CC);
+    return;
+end
 
 if Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0  %não funciona se usar isempty()
     fprintf("\n\tAinda não acabou de definir a configuração do circuito.");

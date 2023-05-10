@@ -17,7 +17,6 @@ td = dados_num(3)*1e-3;
 %% Grafico do Pulso Triangular
 
 N=10000; %numero de pontos
-a = 2;
 x=linspace(0, ts + td, N); 
 d=(ts+td)/N; % distancia entre cada ponto
 
@@ -52,13 +51,56 @@ title('Pulso Triangular');
 Rs=100;
 
 f = @(x) y - Rs .* x;
+efe = f(x);
 figure(2);
 plot(x.*1e3, f(x), 'LineWidth',2);
 title('Reta da fonte');
+hold on;
+RL_CC = 25;
 
 
+c = @(x) RL_CC .* x;
+ce = c(x);
+plot(x.*1e3, c(x), 'b', LineWidth = 2);
+grid on;
+title('Diagrama V(I)');
+xlabel('Corrente (A)'); ylabel('Tensão (V)');
+hold off;
 
+zero_x = fzero(@(x) f(x) - c(x), 2);
+zero_y = f(zero_x);
+po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
 
+%% pulso retangular
 
+clear;
+clc;
 
+%dlgtitle = 'Pulso triangular';
+%perguntas = {'Amplitude: ', 'Duração (mA): '};
+%dims = [1 40];
+%definput = {'0', '0'};
+        
+%dados = inputdlg(perguntas, dlgtitle, dims, definput);
+%dados_num = cellfun(@str2num, dados);
 
+%A = dados_num(1);
+%tau = dados_num(2);
+A = 3; tau = 6; t_inicial = 0; t_final = tau;
+
+t = linspace(-1, tau + 1, 1000);
+
+y = A * rectpuls(t - tau/2, tau);
+figure(1)
+plot(t, y, 'b', LineWidth = 2);
+xlim([-2 tau + 2]); ylim([-0.5 A + 2])
+
+Rs = 100; I = A / Rs;
+x = linspace(0, I, 1000);
+
+f = @(x) A - Rs .* x;
+figure(2);
+plot(x.*1e3, f(x), 'LineWidth',2);
+title('Reta da fonte');
+hold on;
+RL_CC = 25;

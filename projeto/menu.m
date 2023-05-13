@@ -13,6 +13,6 @@ fprintf("\n\t Prima 4 - Sair do programa\n\n");
 fprintf("************************************************");
 
 while opcao < 1 || opcao > 4 || ~isscalar(opcao)
-    opcao = input("\n\n\t Opção Escolhida: ");
+    opcao = input("\n\n  Opção Escolhida: ");
 end
 end

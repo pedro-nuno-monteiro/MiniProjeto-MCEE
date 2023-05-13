@@ -1,4 +1,4 @@
-function [Vs, Rs, RL_CC, RL_CA, Td, Z0, L, v, ir_para_tarefa_B] = opcao_1(first_time)
+function [Vs, Rs, RL_CC, Td, Z0, ir_para_tarefa_B] = opcao_1(first_time)
 % função que é executada quando é escolhida
 % a 1a opção do menu
 
@@ -42,7 +42,7 @@ while opcao ~= 9
     fprintf("\n\t\t Prima 6 - Definir impedância de linha | Z0 = %d", Z0_p);
     fprintf("\n\t\t Prima 7 - ou definir comprimento e velocidade de propagação | L = %d | v = %d\n", L_p, v_p);
     
-    fprintf("\n\t\t Prima 8 - Utilizar um dos gráficos da tarefa B | Opção atual: ");
+    fprintf("\n\t Prima 8 - Utilizar um dos gráficos da tarefa B | Opção atual: ");
     if ir_para_tarefa_B
         fprintf("Sim");
     else
@@ -53,7 +53,7 @@ while opcao ~= 9
     fprintf("******************************************************************");
     
     while opcao < 1 || opcao > 9
-        opcao = input('\n\n \t Opção Escolhida: ');
+        opcao = input('\n\n  Opção Escolhida: ');
     end
     
     fprintf("\n\t");
@@ -75,17 +75,20 @@ while opcao ~= 9
             [L_p, v_p] = input('L (m), v (m/s) = ');
             Td_p = L_p / v_p;
         case 8
-            ir_para_tarefa_B = true;
+            if ir_para_tarefa_B
+                ir_para_tarefa_B = false;
+            else
+                ir_para_tarefa_B = true;
+            end
+                
         case 9
             % caso o user saia quando entra na função pela 1a vez
             Vs = Vs_p;
             Rs = Rs_p;
             RL_CC = RL_CC_p;
-            RL_CA = RL_CA_p;
+            %RL_CA = RL_CA_p;
             Td = Td_p;
             Z0 = Z0_p;
-            L = L_p;
-            v = v_p;
             break;
         otherwise
             fprintf("erro?");
@@ -95,11 +98,9 @@ while opcao ~= 9
     Vs = Vs_p;
     Rs = Rs_p;
     RL_CC = RL_CC_p;
-    RL_CA = RL_CA_p;
+    %RL_CA = RL_CA_p;
     Td = Td_p;
     Z0 = Z0_p;
-    L = L_p;
-    v = v_p;
 
 end
 end

@@ -154,7 +154,26 @@ end
 y(pontos_ts + pontos_tf +1 : N) = -A/td.*x3 + A * t_dur /td;
 
 
-plot(x*1e3, y); 
+figure('Name', 'Pulso Digital');
+plot(x*1e3, y, LineWidth = 2); 
+title('Pulso Digital');
 ylim([0 A+1]);
+
+f = @(x) y - Rs .* x;
+figure('Name', 'Diagrama V(I)');
+plot(x.*1e3, f(x), LineWidth = 2);
+title('Diagrama V(I)');
+hold on;
+
+c = @(x) RL_CC .* x;
+plot(x .* 1e3, c(x), 'b', LineWidth = 2);
+grid on;
+xlabel('Corrente (A)'); ylabel('Tensão (V)');
+ylim([0 A + 10]);
+hold off;
+
+zero_x = fzero(@(x) f(x) - c(x), 2);
+zero_y = f(zero_x);
+po = plot(zero_x, zero_y, 'o', 'markerfacecolor','k');
 
 

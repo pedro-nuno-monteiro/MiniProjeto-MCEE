@@ -20,7 +20,7 @@ N=10000; %numero de pontos
 x=linspace(0, ts + td, N); 
 d=(ts+td)/N; % distancia entre cada ponto
 
-%% Primeiro lado do grafico
+
 
 x1= 0 : d : ts-d;
 n_pontos_ate_ts=size(x1); % dá uma matriz do tipo [1 1000] logo temos de ir buscar o segundo elemento
@@ -41,7 +41,7 @@ y(n_pontos_ate_ts+1:N)= x2.* (-A/td) + A*(1 + ts/td); % y=mx+b onde m=-A/td  e b
                                                       % fiz as contas à mão
 
 
-%% Plot do grafico
+
 figure(1);
 plot(x.*1e3, y, 'LineWidth',2);
 title('Pulso Triangular');
@@ -71,22 +71,12 @@ zero_x = fzero(@(x) f(x) - c(x), 2);
 zero_y = f(zero_x);
 po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
 
-%% pulso retangular
+%% Pulso Retangular
 
 clear;
 clc;
 
-%dlgtitle = 'Pulso triangular';
-%perguntas = {'Amplitude: ', 'Duração (mA): '};
-%dims = [1 40];
-%definput = {'0', '0'};
-        
-%dados = inputdlg(perguntas, dlgtitle, dims, definput);
-%dados_num = cellfun(@str2num, dados);
-
-%A = dados_num(1);
-%tau = dados_num(2);
-A = 3; tau = 6; t_inicial = 0; t_final = tau;
+A = 3; tau = 6; 
 
 t = linspace(-1, tau + 1, 1000);
 
@@ -157,4 +147,37 @@ y(pontos_ts + pontos_tf +1 : N) = -A/td.*x3 + A * t_dur /td;
 plot(x*1e3, y); 
 ylim([0 A+1]);
 
+%% Trem de Impulsos
 
+dlgtitle='Trem de Impulsos';
+perguntas={'Insira a Amplitude: ', 'Duração do pulso: ', 'Insira o Periodo dos pulsos: ', 'Insira o numero de impulsos: '};
+dims=[1 40];
+definput={'0', '0', '0', '0'};
+
+
+dados=inputdlg(perguntas, dlgtitle, dims, definput);
+dados_num = cellfun(@str2num, dados);
+
+A = dados_num(1);
+t_dur=dados_num(2);
+T=dados_num(3);
+num_imp=dados_num(4);
+
+N=10000;
+t = linspace(0, T*num_imp, N);
+d=T*num_imp /N;
+
+num_pontos=round(N/num_imp);
+
+%%
+for i=0: num_imp-1
+    t1= i*T : d : (i+1)*T -d;
+    y(i*num_pontos+1 : num_pontos *(i+1))= A * rectpuls(t1 - i*T/2, t_dur);
+end
+tam_y=size(y);
+tam_y=tam_y(2);
+if tam_y ~=N
+    y(tam_y+1: N)=0;
+end
+
+plot(t, y);

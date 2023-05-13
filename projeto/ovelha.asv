@@ -27,8 +27,8 @@ while prima_1 == false || prima_2 == false
                 aux=[];
                
                 clc;
-                carga=input('Escreva a reta da carga não linear: ');
-                c=@(x) carga;
+                c=input('Escreva a reta da carga não linear: ');
+                carga=@(x) c;
 
                 clc;
                 %c=strcat('@(x)',['(' c ')']);
@@ -58,8 +58,8 @@ while prima_1 == false || prima_2 == false
 
             if linear_2 == 2 
                 clc;
-                fonte=input('Escreva a reta da fonte não linear: ');
-                f=@(x) fonte;
+                f=input('Escreva a reta da fonte não linear: ');
+                fonte=@(x) f;
                 clc;
                 %f=strcat('@(x)', ['(' f ')']);
                 %f=eval(f);
@@ -80,13 +80,14 @@ while prima_1 == false || prima_2 == false
         opcao=0;
 end
 
-plot(x, c(x), 'LineWidth', 2); hold on;
-plot(x, f(x), 'LineWidth', 2);
+plot(x, carga(x), 'LineWidth', 2); hold on;
+plot(x, fonte(x), 'LineWidth', 2);
 ylim([0 14]); 
 
 zero_x = fzero(@(x) f(x) - c(x), 2);
 zero_y = f(zero_x);
-po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k'); hold off;
+po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k'); 
+
 
 
 Z0 = 50;

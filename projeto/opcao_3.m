@@ -1,4 +1,4 @@
-function [] = opcao_3(Vs, Rs, RL_CC, RL_CA, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa_B)
+function [] = opcao_3(Vs, Rs, RL_CC, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa_B)
 
 % função que é executada quando é escolhida
 % a 3a opção do menu
@@ -14,7 +14,7 @@ clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
 
 if ir_para_tarefa_B
-    tarefa_B(Rs, RL_CC);
+    tarefa_B(Rs, RL_CC, Td_ma, Z0);
     return;
 end
 

@@ -80,13 +80,25 @@ while prima_1 == false || prima_2 == false
         opcao=0;
 end
 
+
 plot(x, c(x), 'LineWidth', 2); hold on;
 plot(x, f(x), 'LineWidth', 2);
 ylim([0 14]); 
 
-zero_x = fzero(@(x) f(x) - c(x), 2);
-zero_y = f(zero_x);
-po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k'); hold off;
+    x0=intersecao(f(x), c(x));
+    y0=c(x0);
+    
+    
+    
+    
+    
+    
+    %x0=intersecao(f(x), c(x))
+
+
+
+%zero_y = f(zero_x);
+%po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k'); hold off;
 
 
 Z0 = 50;

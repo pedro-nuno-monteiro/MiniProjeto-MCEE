@@ -1,22 +1,26 @@
-clc; clear; close all;
+Vs = 75;
+Rs = 100;
+RL_CC = 200;
+Td_ma = 2e-3;
+Z0 = 50;
+n_iteracoes = 4;
+tolerancia = 0.005;
 
-%Vs = 75; Rs = 100; RL_CC = 200; Td = 2e-3; Z0=50; tolerancia = 0.05;
-Vs=24; Rs=5; RL_CC=25; Z0=100; Td_ma=5e-3; tolerancia = -20;
-n_iteracoes=9;
 
-% fonte + carga
 figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off', 'ToolBar', 'none', 'MenuBar', 'none');
-I = Vs/Rs;
-x = linspace(0, I, 10000);
-f = @(x) Vs - Rs .* x;
 
-subplot(2, 6, [1 8]);
-grafico_fonte = plot(x, f(x), 'r', LineWidth = 2);
+x = linspace(0, 10, 10000);
+
+f = @(x) -x.^2 + 70;
+subplot(1, 3, 1);
+grafico_fonte = plot(x, f(x), 'r', 'LineWidth', 2);
 hold on;
 
-c = @(x) RL_CC .* x;
-grafico_carga = plot(x, c(x), 'b', LineWidth = 2);
+c = @(x) 2*x.^2;
+
+grafico_carga = plot(x, c(x), 'b', 'LineWidth', 2);
 grid on;
+title('Diagrama V(I)');
 xlabel('Corrente (A)'); ylabel('Tensão (V)');
 grid on;
 
@@ -78,41 +82,42 @@ for k = 0:n_iteracoes
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
     end
-
-    if I > 4 * zer_x
-        ylim([0 Vs+1]); xlim([0 2*zer_x]);
-    else
-        ylim([0 Vs+1]); xlim([0 I]);
-    end
+    
+    ylim([0 75]); xlim([0 10]);
 end
 legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 hold off;
 
 % gráfico tensão
-Td_ma = Td_ma*1e3;
+Td = Td_ma*1e3;
 
 if ~terminado
-    x_tensao_fonte = 0 : 2*Td_ma : n_iteracoes*Td_ma;
-    x_tensao_carga = [0, Td_ma : 2*Td_ma : n_iteracoes*Td_ma - Td_ma, n_iteracoes*Td_ma];
+    x_tensao_fonte = 0 : 2*Td : n_iteracoes*Td;
+    x_tensao_carga = [0, Td : 2*Td : n_iteracoes*Td - Td, n_iteracoes*Td];
 
     x_corrente_fonte = x_tensao_fonte;
     x_corrente_carga = x_tensao_carga;
     
     if mod(n_iteracoes, 2) == 0
-        va = zeros(1, n_iteracoes/2+2);  %tensão na carga
-        aux_va = 0;
-        ia = zeros(1, n_iteracoes/2+2);  %corrente na carga
-        aux_ia = 0;
-    
-        vb = zeros(1, n_iteracoes/2+1);  %tensão na fonte
-        aux_vb = 0;
-        ib = zeros(1, n_iteracoes/2+1);  %tensão na fonte
-        aux_ib = 0;
-    
-    else
+        va = zeros(1, n_iteracoes/2 + 2);  %tensão na carga
+        ia = zeros(1, n_iteracoes/2 + 2);  %corrente na carga
 
+        vb = zeros(1, n_iteracoes/2 + 1);  %tensão na fonte
+        ib = zeros(1, n_iteracoes/2 + 1);  %tensão na fonte
+
+    else
+        va = zeros(1, round(n_iteracoes/2) + 1);  %tensão na carga
+        ia = zeros(1, round(n_iteracoes/2) + 1);  %corrente na carga
+
+        vb = zeros(1, round(n_iteracoes/2));  %tensão na fonte
+        ib = zeros(1, round(n_iteracoes/2));  %tensão na fonte
     end
 
+    aux_va = 0;
+    aux_ia = 0;
+    aux_vb = 0;
+    aux_ib = 0;
+    
     for k = 0:n_iteracoes
         if mod(k, 2) == 0
             va(aux_va + 1) = pontos_y(k + 1);
@@ -133,24 +138,26 @@ if ~terminado
     ia(end) = ia(end-1);
     ib(end) = ib(end-1);
 
-    subplot(2, 6, [3 10]);
+    subplot(1, 3, 2);
     stairs(x_tensao_fonte, vb, 'r', LineWidth = 2);
     hold on;
     stairs(x_tensao_carga, va, 'b', LineWidth = 2);
     xlabel("t(ms)"); ylabel("V");
-    ylim([0 Vs]); xlim([0 n_iteracoes*Td_ma]);
+    title('Tensão');
+    ylim([0 max(pontos_y) + 1]); xlim([0 n_iteracoes * Td + 2 * Td]);
     legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;
-    hold off;
 
-    subplot(2,6, [5 12]);
+    subplot(1, 3, 3);
     stairs(x_corrente_fonte, ib, 'r', LineWidth = 2);
     hold on;
     stairs(x_corrente_carga, ia, 'b', LineWidth = 2);
     xlabel("t(ms)"); ylabel("A");
-    ylim([0 1]); xlim([0 n_iteracoes*Td_ma]);
+    title('Corrente');
+    ylim([0 max(pontos_x)]); xlim([0 n_iteracoes* Td + 2 * Td]);
     legend('Corrente na fonte', 'Corrente na carga', 'Location', 'best');
     grid on;
-    hold off;
 
 end
+
+hold off;

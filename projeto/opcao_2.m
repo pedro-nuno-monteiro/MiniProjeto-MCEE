@@ -15,14 +15,14 @@ while opcao ~= 4
     clc;
     opcao = 0;
     fprintf("********************* Número de Iterações *********************\n");
-    fprintf("\n\t Prima 1 - Definir número de iterações a realizar | Iterações = %d", n_iteracoes_p);
-    fprintf("\n\n\t Prima 2 - Definir valor de tolerância | Tolerância = %d", tolerancia_p);
-    fprintf("\n\t\t ou Prima 3 - Valor de tolerância padrão | to be written");
+    fprintf("\n\t Prima 1 - Definir número de iterações a realizar | Iterações  = %d", n_iteracoes_p);
+    fprintf("\n\n\t Prima 2 - Definir valor de tolerância | Tolerância   = %d", tolerancia_p);
+    fprintf("\n\t\t ou Prima 3 - Valor de tolerância padrão | Valor Padrão = 0.05");
     
     fprintf("\n\n\t Prima 4 - Voltar ao Menu Principal\n\n");
     fprintf("************************************************");
     
-    while opcao < 1 || opcao > 4
+    while opcao < 1 || opcao > 4 || ~isscalar(opcao)
         opcao = input("\n\n\t Opção Escolhida: ");
     end
 
@@ -34,9 +34,8 @@ while opcao ~= 4
         case 2
             tolerancia_p = input("Tolerância = ");
         case 3
-            tolerancia_p = 10;    %não faço ideia que valor colocar ainda
+            tolerancia_p = 0.05;
         case 4
-            % caso o user saia quando entra na função pela 1a vez
             n_iteracoes = n_iteracoes_p;
             tolerancia = tolerancia_p;
             break;

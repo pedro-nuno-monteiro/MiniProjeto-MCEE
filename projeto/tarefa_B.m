@@ -3,17 +3,17 @@ function [] = tarefa_B(Rs, RL_CC, Td, Z0)
 %função que permite ao user definir o gráfico da fonte
 
 clc;
-fprintf("\n***************************************\n");
-fprintf("\n\tEscolha um dos seguintes gráficos:");
+fprintf("\n********************************************\n");
+fprintf("\n\tEscolha um dos seguintes gráficos:\n");
 fprintf("\n\t\tPrima 1 - Pulso retangular");
 fprintf("\n\t\tPrima 2 - Pulso digital");
 fprintf("\n\t\tPrima 3 - Pulso triangular");
 fprintf("\n\t\tPrima 4 - Trem de impulsos");
 fprintf("\n\t\tPrima 5 - Regressar\n");
-fprintf("\n***************************************\n");
+fprintf("\n********************************************\n");
 
 grafico = 0;
-while grafico < 1 || grafico > 5
+while grafico < 1 || grafico > 5 || ~isscalar(grafico)
     grafico = input('\n  Opção escolhida: ');
 end
 
@@ -28,9 +28,9 @@ switch grafico
             fprintf("\n***************** Pulso Retangular *****************\n");
             fprintf("\n\t Parâmetros: ");
             fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique a duração   | Tau = %d\n\n", tau);
+            fprintf("\n\n\t\t Prima 2 - Indique a duração (mA)   | Tau = %d\n\n", tau);
 
-            while opcao < 1 || opcao > 2
+            while opcao < 1 || opcao > 2 || ~isscalar(opcao)
                 opcao = input("  Opção escolhida: ");
             end
             
@@ -135,7 +135,7 @@ switch grafico
             fprintf("\n\n\t\t Prima 3 - Indique o período   | T = %d\n\n", T);
             fprintf("\n\n\t\t Prima 4 - Número de impulsos  | N = %d\n\n", n_graficos);
 
-            while opcao < 1 || opcao > 4
+            while opcao < 1 || opcao > 4 || ~isscalar(opcao)
                 opcao = input("  Opção escolhida: ");
             end
             
@@ -171,7 +171,7 @@ if Rs == 0 || RL_CC == 0 || Td == 0 || Z0 == 0
     fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
     fprintf("\n\n\t\t Prima 2 - Utilizar a configuração predefinida\n");
 
-    while opcao < 1 || opcao > 2
+    while opcao < 1 || opcao > 2 || ~isscalar(opcao)
         opcao = input('\n  Opção Escolhida: ');
     end
     
@@ -198,14 +198,14 @@ if Rs == 0 || RL_CC == 0 || Td == 0 || Z0 == 0
         fprintf("\n\t\t\t\tTolerância = 0.005\n");
         fprintf("\n\n*********************************************************");
         
-        while opcao < 1 || opcao > 2
+        while opcao < 1 || opcao > 2 || ~isscalar(opcao)
             opcao = input('\n\n  Opção escolhida: ');
         end
             
         if opcao == 1
-            Rs = 100; RL_CC = 200; Td = 0.002; Z0 = 50; n_iteracoes = 4; tolerancia = 0.005;
+            Rs = 100; RL_CC = 200; Td = 0.002; Z0 = 50; n_iteracoes = 4; tolerancia = 2;
         else
-            Rs = 200; RL_CC = 100; Td = 0.005; Z0 = 50; n_iteracoes = 10; tolerancia = 0.005;
+            Rs = 200; RL_CC = 100; Td = 0.005; Z0 = 50; n_iteracoes = 10; tolerancia = 2;
         end
     end
 
@@ -213,91 +213,14 @@ end
 
 switch grafico
     case 1
-
+        
         figure('Name', 'Pulso Retangular');
         plot(t, y, 'b', LineWidth = 2);
-        xlim([-2 tau + 2]); ylim([-0.5 A + 2])
+        xlim([-2 tau + 2]); ylim([-0.5 A + 2]);
 
-        I = A / Rs;
-        x = linspace(0, I, 10000);
-        
-        f = @(x) A - Rs .* x;
-        figure(2);
-        plot(x, f(x), LineWidth = 2);
-        title('Diagrama V(I)');
-        hold on;
-        
-        c = @(x) RL_CC .* x;
-        plot(x, c(x), 'b', LineWidth = 2);
-        grid on;
-        xlabel('Corrente (A)'); ylabel('Tensão (V)');
-        ylim([0 A + 2]);
-        hold on;
-
-        zero_x = fzero(@(x) f(x) - c(x), 2);
-        zero_y = f(zero_x);
-        po = plot(zero_x, zero_y, 'o', 'markerfacecolor','k');
-        
-        zer_x = 0;
-        zer_y = 0;
-        
-        pontos_x = zeros(1, n_iteracoes);
-        pontos_y = zeros(1, n_iteracoes);
-        terminado = false;
-        for k = 0:n_iteracoes
-        
-            if mod(k, 2) == 0
-                
-                b = zer_y - Z0 * zer_x;
-                y1 = @(x) Z0.*x + b;
-                
-                pontos_x(k + 1) = zer_x;
-                pontos_y(k + 1) = zer_y;
-                
-                zer_x = fzero(@(x) f(x) - y1(x), 1);
-                zer_y = y1(zer_x);
-
-                if (abs(zer_x - pontos_x(k + 1)) < tolerancia) || (abs(zer_y - pontos_y(k + 1)) < tolerancia)
-                    fprintf("O método foi interrompido pois atingiu o valor da tolerância.");
-                    terminado = true;
-                    break;
-                end
-        
-                plot(x, y1(x), 'k--');
-                hold on;
-                plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
-                
-            else
-                
-                b = zer_y + Z0 * zer_x;
-                y2 = @(x) -Z0.*x + b;
-        
-                pontos_x(k + 1) = zer_x;
-                pontos_y(k + 1) = zer_y;
-        
-                zer_x = fzero(@(x) c(x) - y2(x), 1);
-                zer_y = y2(zer_x);
-
-                if (abs(zer_x - pontos_x(k + 1)) < tolerancia) || (abs(zer_y - pontos_y(k + 1)) < tolerancia)
-                    fprintf("O método foi interrompido pois atingiu o valor da tolerância.");
-                    terminado = true;
-                    break;
-                end
-        
-                plot(x, y2(x), 'k--');
-                hold on;
-                plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
-            end
-        
-            if I > 4 * zer_x
-                ylim([0 A+1]); xlim([0 2*zer_x]);
-            else
-                ylim([0 A+1]); xlim([0 I]);
-            end
-        end
-        %legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
-        %hold off;
-        pause(10);
+        ir_para_tarefa = 2;
+        opcao_3(A, Rs, RL_CC, Td, Z0, n_iteracoes, tolerancia, ir_para_tarefa, [], [], tau);
+        return;
     case 2
     
         figure('Name', 'Pulso Digital');

@@ -1,4 +1,4 @@
-function [] = tarefa_B(Rs, RL, Td, Z0)
+function [] = tarefa_B(Rs, RL_CC, Td, Z0)
 
 %função que permite ao user definir o gráfico da fonte
 
@@ -45,7 +45,7 @@ switch grafico
         y = A * rectpuls(t - tau/2, tau);
         
     case 2
-        clc;
+
         A = 0;
         ts = 0;
         td = 0;
@@ -75,9 +75,18 @@ switch grafico
             end
         end
 
+        dlgtitle = 'Pulso digital';
+        perguntas = {'Amplitude: ', 'Tempo de subida: ', 'Tempo de descida: ', 'Duração do pulso: '};
+        dims = [1 40];
+        definput = {'0', '0', '0', '0'};
+        
+        dados = inputdlg(perguntas, dlgtitle, dims, definput);
+        dados_num = cellfun(@str2num, dados);
+        
+        A = dados_num(1);
         ts = ts * 1e-3;
         td = td * 1e-3;
-        t_dur = t_dur * 1e-3;
+        t_dur=dados_num(4) * 1e-3;
 
         N = 10000;
         x = linspace(0, t_dur, N); 
@@ -107,34 +116,18 @@ switch grafico
         y(pontos_ts + pontos_tf + 1 : N) = -A/td .* x3 + A * t_dur /td;
 
     case 3
-        clc;
-        A = 0;
-        ts = 0;
-        td = 0;
-        while A == 0 || ts == 0 || td == 0
-            opcao = 0;
-            clc;
-            fprintf("\n***************** Pulso Triangular *****************\n");
-            fprintf("\n\t Parâmetros: ");
-            fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique o tempo de subida (mA)   | Ts = %d\n\n", ts);
-            fprintf("\n\n\t\t Prima 3 - Indique o tempo de descida (mA)  | Td = %d\n\n", td);
 
-            while opcao < 1 || opcao > 3 || ~isscalar(opcao)
-                opcao = input("  Opção escolhida: ");
-            end
-            
-            if opcao == 1
-                A = input("\n\n  A = ");
-            elseif opcao == 2
-                ts = input("\n\n  Ts = ");
-            else
-                td = input("\n\n  Td = ");
-            end
-        end
+        dlgtitle = 'Pulso triangular';
+        perguntas = {'Amplitude: ', 'Tempo de subida: ', 'Tempo de descida: '};
+        dims = [1 40];
+        definput = {'0', '0', '0'};
         
-        ts = ts * 1e-3;
-        td = td * 1e-3;
+        dados = inputdlg(perguntas, dlgtitle, dims, definput);
+        dados_num = cellfun(@str2num, dados);
+        
+        A = dados_num(1);
+        ts = dados_num(2) * 1e-3;
+        td = dados_num(3) * 1e-3;
 
         N = 10000;
         x = linspace(0, ts + td, N);
@@ -200,11 +193,12 @@ switch grafico
         x = linspace(0, n_graficos * T, length(y));
 
     case 5
+        fprintf("opcao 5 - bazar");
         return;
 end
 
 opcao = 0;
-if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
+if Rs == 0 || RL_CC == 0 || Td == 0 || Z0 == 0
     fprintf("\n\tAinda não acabou de definir a configuração do circuito.");
     fprintf("\n\tEscolha uma das seguintes opções:");
     fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
@@ -216,14 +210,14 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
     
     if opcao == 1
 
-        while Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
+        while Rs == 0 || RL_CC == 0 || Td == 0 || Z0 == 0
             clc;
             opcao = 0;
             fprintf("\n********************* Parâmetros do circuito *********************\n");
             fprintf("\n\t Fonte de Alimentação:\n");
             fprintf("\n\t\t Prima 1 - Definir impedância da fonte | Rs = %d\n", Rs);
             fprintf("\n\t Impedância da Carga:\n");
-            fprintf("\n\t\t Prima 2 - Definir em curto circuito   | RL = %d", RL);
+            fprintf("\n\t\t Prima 2 - Definir em curto circuito   | RL = %d", RL_CC);
             fprintf("\n\t Linha de Transmissão:\n");
             fprintf("\n\t\t Prima 3 - Definir tempo de propagação | Td = %d", Td);
             fprintf("\n\t\t Prima 4 - Definir impedância de linha | Z0 = %d", Z0);
@@ -240,7 +234,7 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
                 case 1
                     Rs = input('Rs (\ohms) = ');
                 case 2
-                    RL = input('RL em CC (\ohms) = ');
+                    RL_CC = input('RL em CC (\ohms) = ');
                 case 3
                     Td = input('Td (s) = ');
                 case 4
@@ -272,9 +266,9 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
         end
             
         if opcao == 1
-            Rs = 100; RL = 200; Td = 0.002; Z0 = 50; n_iteracoes = 4; tolerancia = 2;
+            Rs = 100; RL_CC = 200; Td = 0.002; Z0 = 50; n_iteracoes = 4; tolerancia = 2;
         else
-            Rs = 200; RL = 100; Td = 0.005; Z0 = 50; n_iteracoes = 10; tolerancia = 2;
+            Rs = 200; RL_CC = 100; Td = 0.005; Z0 = 50; n_iteracoes = 10; tolerancia = 2;
         end
     end
 
@@ -289,7 +283,7 @@ switch grafico
         xlim([-2 tau + 2]); ylim([-0.5 A + 2]);
         
         ir_para_tarefa = 2;
-        opcao_3(A, Rs, RL, Td, Z0, n_iteracoes, tolerancia, ir_para_tarefa, [], [], tau);
+        opcao_3(A, Rs, RL_CC, Td, Z0, n_iteracoes, tolerancia, ir_para_tarefa, [], [], tau);
         return;
 
     case 2
@@ -305,7 +299,7 @@ switch grafico
         title('Diagrama V(I)');
         hold on;
 
-        c = @(x) RL .* x;
+        c = @(x) RL_CC .* x;
         plot(x .* 1e3, c(x), 'b', LineWidth = 2);
         grid on;
         xlabel('Corrente (A)'); ylabel('Tensão (V)');
@@ -323,7 +317,7 @@ switch grafico
         plot(x.*1e3, f(x), LineWidth = 2);
         hold on;
         
-        c = @(x) RL .* x;
+        c = @(x) RL_CC .* x;
         plot(x .* 1e3, c(x), 'b', LineWidth = 2);
         grid on;
         title('Diagrama V(I)');
@@ -348,7 +342,7 @@ switch grafico
         title('Diagrama V(I)');
         hold on;
 
-        c = @(x) RL .* x;
+        c = @(x) RL_CC .* x;
         plot(x, c(x), 'b', LineWidth = 2);
         grid on;
         title('Diagrama V(I)');

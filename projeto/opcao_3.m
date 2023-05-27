@@ -1,4 +1,4 @@
-function [] = opcao_3(Vs, Rs, RL_CC, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, tau)
+function [] = opcao_3(Vs, Rs, RL, circuito_aberto, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, tau)
 
 % função que é executada quando é escolhida
 % a 3a opção do menu
@@ -14,7 +14,7 @@ clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
 
 if ir_para_tarefa ~= 2
-    if (Vs == 0 || Rs == 0 || RL_CC == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_tarefa == 0
+    if (Vs == 0 || Rs == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_tarefa == 0   % confirmar valores
         fprintf("\n\tAinda não acabou de definir a configuração do circuito.");
         fprintf("\n\tEscolha uma das seguintes opções:");
         fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
@@ -51,7 +51,7 @@ if ir_para_tarefa ~= 2
             if opcao == 1
                 Vs = 75;
                 Rs = 100;
-                RL_CC = 200;
+                RL = 200;
                 Td_ma = 2e-3;
                 Z0 = 50;
                 n_iteracoes = 4;
@@ -59,7 +59,7 @@ if ir_para_tarefa ~= 2
             else
                 Vs = 24; 
                 Rs = 5; 
-                RL_CC = 25; 
+                RL = 0; 
                 Z0 = 100; 
                 Td_ma = 5e-3; 
                 tolerancia = 2; 
@@ -78,7 +78,7 @@ if ir_para_tarefa ~= 2
         fprintf("\n\t Reta da Fonte = %s", reta_fonte);
         fprintf("\n\t Reta da Carga = %s", reta_carga);
     end
-    fprintf("\n\t RL_CC \t\t\t\t %d %c", RL_CC, char(216));
+    fprintf("\n\t RL_CC \t\t\t\t %d %c", RL, char(216));
     fprintf("\n\t Td \t\t\t\t %f s", Td_ma);
     fprintf("\n\t Z0 \t\t\t\t %f %c", Z0, char(216));
     fprintf("\n\t Número iterações \t %d", n_iteracoes);
@@ -87,11 +87,13 @@ if ir_para_tarefa ~= 2
 
 end
 
-% fonte + carga
+% Método
+
 figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off', 'ToolBar', 'none', 'MenuBar', 'none');
 I = Vs/Rs;
 x = linspace(0, I, 10000);
 
+% reta da fonte
 if ir_para_tarefa == 1
     f = str2func(['@(x) ' reta_fonte]);
     x = linspace(0, 10, 10000);
@@ -99,15 +101,19 @@ else
     f = @(x) Vs - Rs .* x;
 end
 
+% gráfico da fonte
 subplot(1, 3, 1);
 grafico_fonte = plot(x, f(x), 'r', 'LineWidth', 2);
 hold on;
+
+% reta da carga
 if ir_para_tarefa == 1
     c = str2func(['@(x) ' reta_carga]);
 else
-    c = @(x) RL_CC .* x;
+    c = @(x) RL .* x;
 end
 
+% gráfico da carga
 grafico_carga = plot(x, c(x), 'b', 'LineWidth', 2);
 grid on;
 title('Diagrama V(I)');
@@ -123,7 +129,7 @@ po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
 xlabel('Corrente (A)'); ylabel('Tensao (V)');
 legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 
-% tensão na carga + fonte
+% obter valores de tensão e corrente na carga e fonte
 zer_x = 0;
 zer_y = 0;
 
@@ -154,14 +160,12 @@ for k = 0:n_iteracoes
         %    break;
         %end
         
-        if ir_para_tarefa == 2
-            if tau * 1e-3 < k * Td_ma
-                fprintf("O método terminou pois a fonte se desligou.\n");
-                fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método");
-                terminado = true;
-                break;
-            end
-        end
+        %if (tau * 1e-3 < k * Td_ma) && ir_para_tarefa == 2
+        %    fprintf("O método terminou pois a fonte se desligou.\n");
+        %    fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método\n\n");
+        %    terminado = true;
+        %    break;
+        %end
 
         plot(x, y1(x), 'k--');
         hold on;
@@ -189,14 +193,12 @@ for k = 0:n_iteracoes
         %    break;
         %end
 
-        if ir_para_tarefa == 2
-            if tau * 1e-3 < k * Td_ma
-                fprintf("O método terminou pois a fonte se desligou.\n");
-                fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método");
-                terminado = true;
-                break;
-            end
-        end
+        %if (tau * 1e-3 < k * Td_ma) && ir_para_tarefa == 2
+        %    fprintf("O método terminou pois a fonte se desligou.\n");
+        %    fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método\n\n");
+        %    terminado = true;
+        %    break;
+        %end
 
         plot(x, y2(x), 'k--');
         hold on;
@@ -216,7 +218,7 @@ end
 legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 hold off;
 
-% gráfico tensão
+% gráfico tensão - tempo e corrente - tempo
 Td = Td_ma*1e3;
 
 if ~terminado
@@ -267,6 +269,7 @@ if ~terminado
     ia(end) = ia(end-1);
     ib(end) = ib(end-1);
 
+    % gráfico tensão - tempo
     subplot(1, 3, 2);
     stairs(x_tensao_fonte, vb, 'r', LineWidth = 2);
     hold on;
@@ -274,9 +277,13 @@ if ~terminado
     xlabel("t(ms)"); ylabel("V");
     title('Tensão');
     ylim([0 max(pontos_y) + 1]); xlim([0 n_iteracoes * Td + 2 * Td]);
+    if RL == 0
+        ylim([-50 50]);
+    end
     legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;
 
+    % gráfico corrente - tempo
     subplot(1, 3, 3);
     stairs(x_corrente_fonte, ib, 'r', LineWidth = 2);
     hold on;
@@ -288,7 +295,8 @@ if ~terminado
     grid on;
 
     hold off;
-
+    
+    % Tabela com valores de Tensão e Corrente
     fprintf("\n\tTabela dos valores da tensão:\n");
     fprintf("\n\tIteração\t\tTempo\t\tTensão\t\t   Corrente");
     for k = 0:n_iteracoes
@@ -296,6 +304,7 @@ if ~terminado
         fprintf("\n\t%d\t\t\t\t%2.2d s\t\t%2.3f V \t\t%2.3f A", k + 1, tempo, pontos_y(k + 1), pontos_x(k + 1));
     end
     
+    % Ponto de Operação
     fprintf("\n\n***********************************************************\n");
     fprintf("\t\nPonto de Operação:");
     fprintf("\n\n\t\tV = %0.3f V", zero_x);

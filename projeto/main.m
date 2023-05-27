@@ -6,7 +6,7 @@ clc;
 % FICHEIRO PRINCIPAL 
 
 %inicialiar tudinho
-[Vs, Rs, RL_CC, RL_CA, Td, L, v, n_iteracoes, tolerancia, Z0, ir_para_tarefa, reta_fonte, reta_carga] = deal(0);
+[Vs, Rs, RL, circuito_aberto, Td, L, v, n_iteracoes, tolerancia, Z0, ir_para_tarefa, reta_fonte, reta_carga] = deal(0);
 first_time_1 = true;
 first_time_2 = true;
 opcao = 0;
@@ -15,7 +15,7 @@ while opcao ~= 4
     
     switch opcao
         case 1
-            [Vs, Rs, RL_CC, Td, Z0, ir_para_tarefa, reta_fonte, reta_carga] = opcao_1(first_time_1);
+            [Vs, Rs, RL, circuito_aberto, Td, Z0, ir_para_tarefa, reta_fonte, reta_carga] = opcao_1(first_time_1);
             first_time_1 = false;
         
         case 2
@@ -24,9 +24,9 @@ while opcao ~= 4
         
         case 3
             if ir_para_tarefa == 2
-                tarefa_B(Rs, RL_CC, Td, Z0);
+                tarefa_B(Rs, RL, Td, Z0);
             else
-                opcao_3(Vs, Rs, RL_CC, Z0, Td, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, []);
+                opcao_3(Vs, Rs, RL, circuito_aberto, Z0, Td, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, []);
             end
 
         case 4

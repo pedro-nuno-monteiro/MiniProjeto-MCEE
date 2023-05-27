@@ -33,14 +33,11 @@ while opcao ~= 4
             n_iteracoes_p = -1;
             while n_iteracoes_p < 0 || ~isscalar(n_iteracoes_p)
                 n_iteracoes_p = input('Número iterações = ');
-                fprintf("\n\t");
             end
         case 2
-            tolerancia_p = -1;
-            while tolerancia_p < 0 || ~isscalar(tolerancia_p)
-                tolerancia_p = input("Tolerância = ");
-                fprintf("\n\t");
-            end
+            n_iteracoes_p = -1;
+            while n_iteracoes_p < 0 || ~isscalar(n_iteracoes_p)
+            tolerancia_p = input("Tolerância = ");
         case 3
             tolerancia_p = 0.05;
         case 4

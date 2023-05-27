@@ -15,8 +15,8 @@ grafico_fonte = plot(x, f(x), 'r', 'LineWidth', 2);
 hold on;
 
 c = @(x) zeros(size(x));
-yval = linspace(0, Vs, 10000)
-grafico_carga = plot(0 * ones(size(x)), yval, 'b', LineWidth=2);
+yval = li
+grafico_carga = plot(0 * ones(size(x)), x, 'b', LineWidth=2);
 grid on;
 xlabel('Corrente (A)'); ylabel('Tensão (V)');
 grid on;

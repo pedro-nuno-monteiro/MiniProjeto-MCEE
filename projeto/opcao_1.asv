@@ -114,9 +114,8 @@ while opcao ~= 11
             end
         case 9
             valores = input('L(m), v(m/s) = ', 's');
-            valores = strsplit(valores, ' ');
-            L_p = str2double(valores{1});
-            v_p = str2double(valores{2});
+            valores = strsplit(valoresm, ' ');
+            L_p
             Td_p = L_p / v_p;
         case 10
             if ir_para_tarefa == 0 || ir_para_tarefa == 1

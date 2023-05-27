@@ -10,6 +10,7 @@ function [] = opcao_3(Vs, Rs, RL, circuito_aberto, Td_ma, Z0, n_iteracoes, toler
 % 4. gráfico da corrente na fonte/carga
 % 5. tabela com valores de tensão/corrente 
 % 6. tensão e corrente no ponto de operação
+
 clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
 
@@ -110,19 +111,36 @@ hold on;
 if ir_para_tarefa == 1
     c = str2func(['@(x) ' reta_carga]);
 else
-    c = @(x) RL .* x;
+    if circuito_aberto
+        verticalLine = @(c)0*ones(size(c));
+        c = linspace(0, Vs+1, 10000);
+    else
+        c = @(x) RL .* x;
+    end
 end
 
 % gráfico da carga
-grafico_carga = plot(x, c(x), 'b', 'LineWidth', 2);
+
+if circuito_aberto
+    grafico_carga = plot(verticalLine(c), c, 'b', 'LineWidth', 2);
+else
+    grafico_carga = plot(x, c(x), 'b', 'LineWidth', 2);
+end
 grid on;
+
+
 title('Diagrama V(I)');
 xlabel('Corrente (A)'); ylabel('Tensão (V)');
 grid on;
 
 % ponto de operação
-zero_x = fzero(@(x) f(x) - c(x), 2);
-zero_y = f(zero_x);
+if circuito_aberto
+    zero_x=0;
+    zero_y=Vs;
+else    
+    zero_x = fzero(@(x) f(x) - c(x), 2);
+    zero_y = f(zero_x);
+end
 
 po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
 
@@ -178,8 +196,13 @@ for k = 0:n_iteracoes
         pontos_x(k + 1) = zer_x;
         pontos_y(k + 1) = zer_y;
 
-        zer_x = fzero(@(x) c(x) - y2(x), 1);
-        zer_y = y2(zer_x);
+        if circuito_aberto
+            zer_x = 0;
+            zer_y = b;
+        else
+            zer_x = fzero(@(x) c(x) - y2(x), 1);
+            zer_y = y2(zer_x);
+        end
 
         if pontos_y(k + 1) > zer_y
             razao = zer_y * 100 / pontos_y(k + 1);
@@ -204,8 +227,12 @@ for k = 0:n_iteracoes
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
     end
-    
-    if ir_para_tarefa == 0 || ir_para_tarefa == 2
+end
+
+   if ir_para_tarefa == 0 || ir_para_tarefa == 2
+        if circuito_aberto
+            zer_x=1;
+        end
         if I > 4 * zer_x
             ylim([0 Vs+1]); xlim([0 2*zer_x]);
         else
@@ -214,7 +241,7 @@ for k = 0:n_iteracoes
     else
         ylim([0 75]); xlim([0 10]);
     end
-end
+
 legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 hold off;
 
@@ -278,7 +305,7 @@ if ~terminado
     title('Tensão');
     ylim([0 max(pontos_y) + 1]); xlim([0 n_iteracoes * Td + 2 * Td]);
     if RL == 0
-        ylim([-50 50]);
+        ylim([0 50]);
     end
     legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;

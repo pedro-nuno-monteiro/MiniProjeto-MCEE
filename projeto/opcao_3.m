@@ -28,12 +28,12 @@ if (Vs == 0 || Rs == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_
         fprintf("\n\n\t\t Opção 1:");
         fprintf("\n\t\t\t\tVs = 75"); fprintf("\n\t\t\t\tRs = 100"); fprintf("\n\t\t\t\tRL = 200");
         fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
-        fprintf("\n\t\t\t\tTolerância = 2");
+        fprintf("\n\t\t\t\tTolerância = 99%%");
         
         fprintf("\n\n\t\t Opção 2:");
         fprintf("\n\t\t\t\tVs = 24"); fprintf("\n\t\t\t\tRs = 5"); fprintf("\n\t\t\t\tRL = 25");
         fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
-        fprintf("\n\t\t\t\tTolerância = 2\n");
+        fprintf("\n\t\t\t\tTolerância = 99%%\n");
         fprintf("\n************************************************************")
 
         while opcao < 1 || opcao > 2 || ~isscalar(opcao)
@@ -47,14 +47,14 @@ if (Vs == 0 || Rs == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_
             Td_ma = 2e-3;
             Z0 = 50;
             n_iteracoes = 4;
-            tolerancia = 2;
+            tolerancia = 99;
         else
             Vs = 24; 
             Rs = 5; 
             RL = 25; 
             Z0 = 100; 
             Td_ma = 5e-3; 
-            tolerancia = 2; 
+            tolerancia = 90; 
             n_iteracoes = 10;
         end
     end
@@ -101,8 +101,8 @@ if ir_para_tarefa == 1
     c = str2func(['@(x) ' reta_carga]);
 else
     if circuito_aberto
-        verticalLine = @(c)0*ones(size(c));
-        c = linspace(0, Vs+1, 10000);
+        verticalLine = @(c) 0 * ones(size(c));
+        c = linspace(0, Vs + 1, 10000);
     else
         c = @(x) RL .* x;
     end
@@ -117,15 +117,14 @@ else
 end
 grid on;
 
-
 title('Diagrama V(I)');
 xlabel('Corrente (A)'); ylabel('Tensão (V)');
 grid on;
 
 % ponto de operação
 if circuito_aberto
-    zero_x=0;
-    zero_y=Vs;
+    zero_x = 0;
+    zero_y = Vs;
 else    
     zero_x = fzero(@(x) f(x) - c(x), 2);
     zero_y = f(zero_x);
@@ -160,20 +159,19 @@ for k = 0:n_iteracoes
         else 
             razao =  pontos_y(k + 1) * 100 / zer_y;
         end
-
-        %if ((100 - tolerancia) < pontos_x(k + 1) * 100 / zer_x) || ((100 - tolerancia) < razao) && pontos_x(k + 1) ~= 0
-        %    fprintf("O método foi interrompido pois atingiu o valor da tolerância.");
-        %    terminado = true;
-        %    break;
-        %end
         
-        %if (tau * 1e-3 < k * Td_ma) && ir_para_tarefa == 2
-        %    fprintf("O método terminou pois a fonte se desligou.\n");
-        %    fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método\n\n");
-        %    terminado = true;
-        %    break;
-        %end
-
+        if ~circuito_aberto
+            if ((tolerancia < pontos_x(k + 1) * 100 / zer_x) || tolerancia < razao) && pontos_x(k + 1) ~= 0
+                fprintf("O método foi interrompido pois atingiu o valor da tolerância.\n");
+                if (tolerancia < pontos_x(k + 1) * 100 / zer_x)
+                    razao = pontos_x(k + 1) * 100 / zer_x;
+                end
+                fprintf("Valor atingido = %0.3f\n", razao)
+                terminado = true;
+                break;
+            end
+        end
+        
         plot(x, y1(x), 'k--');
         hold on;
         plot(zer_x, zer_y, 'o', 'MarkerFaceColor','y');
@@ -199,18 +197,17 @@ for k = 0:n_iteracoes
             razao =  pontos_y(k + 1) * 100 / zer_y;
         end
 
-        %if ((100 - tolerancia) < pontos_x(k + 1) * 100 / zer_x) || ((100 - tolerancia) < razao) && pontos_x(k + 1) ~= 0
-        %    fprintf("O método foi interrompido pois atingiu o valor da tolerância.");
-        %    terminado = true;
-        %    break;
-        %end
-
-        %if (tau * 1e-3 < k * Td_ma) && ir_para_tarefa == 2
-        %    fprintf("O método terminou pois a fonte se desligou.\n");
-        %    fprintf("A duração do pulso é menor que o tempo total necessário para realizar o método\n\n");
-        %    terminado = true;
-        %    break;
-        %end
+        if ~circuito_aberto
+            if ((tolerancia < pontos_x(k + 1) * 100 / zer_x) || tolerancia < razao) && pontos_x(k + 1) ~= 0
+                fprintf("O método foi interrompido pois atingiu o valor da tolerância.\n");
+                if (tolerancia < pontos_x(k + 1) * 100 / zer_x)
+                    razao = pontos_x(k + 1) * 100 / zer_x;
+                end
+                fprintf("Valor atingido = %0.3f\n", razao)
+                terminado = true;
+                break;
+            end
+        end
 
         plot(x, y2(x), 'k--');
         hold on;
@@ -218,24 +215,28 @@ for k = 0:n_iteracoes
     end
 end
 
-   if ir_para_tarefa == 0 || ir_para_tarefa == 2
-        if circuito_aberto
-            zer_x=1;
-        end
-        if I > 4 * zer_x
-            ylim([0 Vs+1]); xlim([0 2*zer_x]);
-        else
-            ylim([0 Vs+1]); xlim([0 I]);
-        end
-    else
-        ylim([0 75]); xlim([0 10]);
+if ir_para_tarefa == 0 || ir_para_tarefa == 2
+    if circuito_aberto
+        zer_x = 1;
     end
+
+    if I > 4 * zer_x
+        ylim([0 Vs + 1]); 
+        xlim([0 2 * zer_x]);
+    else
+        ylim([0 Vs + 1]); 
+        xlim([0 I]);
+    end
+else
+    ylim([0 75]); 
+    xlim([0 10]);
+end
 
 legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
 hold off;
 
 % gráfico tensão - tempo e corrente - tempo
-Td = Td_ma*1e3;
+Td = Td_ma * 1e3;
 
 if ~terminado
 
@@ -289,13 +290,18 @@ if ~terminado
     subplot(1, 3, 2);
     stairs(x_tensao_fonte, vb, 'r', LineWidth = 2);
     hold on;
+    
     stairs(x_tensao_carga, va, 'b', LineWidth = 2);
-    xlabel("t(ms)"); ylabel("V");
+    xlabel("t(ms)"); 
+    ylabel("V");
     title('Tensão');
-    ylim([0 max(pontos_y) + 1]); xlim([0 n_iteracoes * Td + 2 * Td]);
+    ylim([0 max(pontos_y) + 1]); 
+    xlim([0 n_iteracoes * Td + 2 * Td]);
+    
     if RL == 0
         ylim([0 50]);
     end
+    
     legend('Tensão na fonte', 'Tensão na carga', 'Location', 'best');
     grid on;
 
@@ -303,13 +309,15 @@ if ~terminado
     subplot(1, 3, 3);
     stairs(x_corrente_fonte, ib, 'r', LineWidth = 2);
     hold on;
+    
     stairs(x_corrente_carga, ia, 'b', LineWidth = 2);
     xlabel("t(ms)"); ylabel("A");
     title('Corrente');
-    ylim([0 max(pontos_x)]); xlim([0 n_iteracoes* Td + 2 * Td]);
+    ylim([0 max(pontos_x)]); 
+    xlim([0 n_iteracoes* Td + 2 * Td]);
+    
     legend('Corrente na fonte', 'Corrente na carga', 'Location', 'best');
     grid on;
-
     hold off;
     
     % Tabela com valores de Tensão e Corrente
@@ -329,6 +337,6 @@ if ~terminado
 
 end
 
-input("\Prima uma tecla para voltar ao menu ");
+input("\nPrima uma tecla para voltar ao menu ");
 
 end

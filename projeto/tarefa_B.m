@@ -28,7 +28,7 @@ switch grafico
             fprintf("\n***************** Pulso Retangular *****************\n");
             fprintf("\n\t Parâmetros: ");
             fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique a duração (mA)   | Tau = %d\n\n", tau);
+            fprintf("\n\n\t\t Prima 2 - Indique a duração (mA)   | Tau = %d", tau);
 
             while opcao < 1 || opcao > 2 || ~isscalar(opcao)
                 opcao = input("  Opção escolhida: ");
@@ -46,18 +46,15 @@ switch grafico
         
     case 2
         clc;
-        A = 0;
-        ts = 0;
-        td = 0;
-        t_dur = 0;
+        [A, ts, td, t_dur] = deal(0);
         while A == 0 || ts == 0 || td == 0 || t_dur == 0
             opcao = 0;
             clc;
             fprintf("\n***************** Pulso Digital *****************\n");
             fprintf("\n\t Parâmetros: ");
             fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique o tempo de subida (mA)   | Ts = %d\n\n", ts);
-            fprintf("\n\n\t\t Prima 3 - Indique o tempo de descida (mA)  | Td = %d\n\n", td);
+            fprintf("\n\n\t\t Prima 2 - Indique o tempo de subida (mA)   | Ts = %d", ts);
+            fprintf("\n\n\t\t Prima 3 - Indique o tempo de descida (mA)  | Td = %d", td);
             fprintf("\n\n\t\t Prima 4 - Indique a duração (mA)  | D = %d\n\n", t_dur);
 
             while opcao < 1 || opcao > 4 || ~isscalar(opcao)
@@ -65,13 +62,25 @@ switch grafico
             end
             
             if opcao == 1
-                A = input("\n\n  A = ");
+                A = -1;
+                while A < 0 || ~isscalar(A)
+                    A = input("\n\n  A = ");
+                end
             elseif opcao == 2
-                ts = input("\n\n  Ts = ");
+                ts = -1;
+                while ts < 0 || ~isscalar(ts)
+                    ts = input("\n\n  Ts = ");
+                end
             elseif opcao == 3
-                td = input("\n\n  Td = ");
+                td = -1;
+                while td < 0 || ~isscalar(td)
+                    td = input("\n\n  Td = ");
+                end
             else
-                t_dur = input("\n\n Duração = ");
+                t_dur = -1;
+                while t_dur < 0 || ~isscalar(t_dur)
+                    t_dur = input("\n\n Duração = ");
+                end
             end
         end
 
@@ -108,28 +117,35 @@ switch grafico
 
     case 3
         clc;
-        A = 0;
-        ts = 0;
-        td = 0;
+        [A, ts, td] = deal(0);
         while A == 0 || ts == 0 || td == 0
             opcao = 0;
             clc;
             fprintf("\n***************** Pulso Triangular *****************\n");
             fprintf("\n\t Parâmetros: ");
             fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique o tempo de subida (mA)   | Ts = %d\n\n", ts);
-            fprintf("\n\n\t\t Prima 3 - Indique o tempo de descida (mA)  | Td = %d\n\n", td);
+            fprintf("\n\n\t\t Prima 2 - Indique o tempo de subida (mA)   | Ts = %d", ts);
+            fprintf("\n\n\t\t Prima 3 - Indique o tempo de descida (mA)  | Td = %d", td);
 
             while opcao < 1 || opcao > 3 || ~isscalar(opcao)
                 opcao = input("  Opção escolhida: ");
             end
             
             if opcao == 1
-                A = input("\n\n  A = ");
+                A = -1;
+                while A < 0 || ~isscalar(A)
+                    A = input("\n\n  A = ");
+                end
             elseif opcao == 2
-                ts = input("\n\n  Ts = ");
+                ts = -1;
+                while ts < 0 || ~isscalar(ts)
+                    ts = input("\n\n  Ts = ");
+                end
             else
-                td = input("\n\n  Td = ");
+                td = -1;
+                while td < 0 || ~isscalar(td)
+                    td = input("\n\n  Td = ");
+                end
             end
         end
         
@@ -138,17 +154,17 @@ switch grafico
 
         N = 10000;
         x = linspace(0, ts + td, N);
-        d = (ts+td)/N; % distancia entre cada ponto
+        d = (ts + td)/N;        % distancia entre cada ponto
 
         x1 = 0 : d : ts - d;
-        pontos_ts = size(x1); % matriz do tipo [1 1000]
+        pontos_ts = size(x1);   % matriz do tipo [1 1000]
         pontos_ts = pontos_ts(2);
         
         y(1:pontos_ts) = x1 .* A/ts; % y=mx onde m=A/ts
 
         x2 = ts : d : td + ts;
 
-        if (size(x2) ~= N - pontos_ts) % ns porque, mas tenho de colocar este if se nao, às vezes nao dá
+        if (size(x2) ~= N - pontos_ts)
             x2 = ts : d : td + ts - d;
         end
         
@@ -157,10 +173,7 @@ switch grafico
     case 4
 
         clc;
-        A = 0;
-        tau = 0;
-        T = 0;
-        n_graficos = 0;
+        [A, tau, T, n_graficos] = deal(0);
         while A == 0 || tau == 0 || T == 0 || n_graficos == 0
             opcao = 0;
             clc;
@@ -177,9 +190,15 @@ switch grafico
             
             switch opcao
                 case 1 
-                    A = input("\n\n  A = ");
+                    A = -1;
+                    while A < 0 || ~isscalar(A)
+                        A = input("\n\n  A = ");
+                    end
                 case 2
-                    tau = input("\n\n  Tau = ");
+                    tau = -1;
+                    while tau < 0 || ~isscalar(tau)
+                        tau = input("\n\n  Tau = ");
+                    end
                 case 3
                     T = input("\n\n  T = ");
                     while T < tau
@@ -187,7 +206,10 @@ switch grafico
                         T = input("");
                     end
                 case 4
-                    n_graficos = input("\n\n Número de Impulsos = ");
+                    n_graficos = -1;
+                    while n_graficos < 0 || ~isscalar(n_graficos)
+                        n_graficos = input("\n\n Número de Impulsos = ");
+                    end
             end
         end
 
@@ -238,13 +260,25 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
         
             switch opcao
                 case 1
-                    Rs = input('Rs = ');
+                    Rs = -1;
+                    while Rs < 0 || ~isscalar(Rs)
+                        Rs = input('Rs = ');
+                    end
                 case 2
-                    RL = input('RL = ');
+                    RL = -1;
+                    while RL < 0 || ~isscalar(RL)
+                        RL = input('RL = ');
+                    end
                 case 3
-                    Td = input('Td (s) = ');
+                    Td = -1;
+                    while Td < 0 || ~isscalar(Td)
+                        Td = input('Td (s) = ');
+                    end
                 case 4
-                    Z0 = input('Z0 = ');
+                    Z0 = -1;
+                    while Z0 < 0 || ~isscalar(Z0)
+                        Z0 = input('Z0 = ');
+                    end
                 case 5
                     valores = input('L(m), v(m/s) = ', 's');
                     valores = strsplit(valores, ' ');
@@ -321,17 +355,6 @@ switch grafico
         
         xlabel('Corrente (A)'); ylabel('Tensao (V)');
         legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
-
-        u = @(t) 1*(t>=0); % degrau
-        s = [];
-        for i= 1:length(amplitudes)
-        s = strcat(s, ['+' num2str(amplitudes(i), 4) '*u(t-' num2str(2*i-1) '*td)']);
-        end
-        s = strcat('@(t, td) ', s) % acrescenta o handle da função
-        f = eval(s); % converte a string numa função anónima
-        t = linspace(0, 55, 1000); % até 55 ms
-        TD = 5; % ms
-        plot(t, f(t, TD), 'linewidth', 2)
 
     case 2
     

@@ -1,11 +1,9 @@
 clear;
 clc;
 
-% projetozinho de matilabi
-
 % FICHEIRO PRINCIPAL 
 
-%inicialiar tudinho
+% Inicializar Variáveis
 [Vs, Rs, RL, circuito_aberto, Td, L, v, n_iteracoes, tolerancia, Z0, ir_para_tarefa, reta_fonte, reta_carga] = deal(0);
 first_time_1 = true;
 first_time_2 = true;
@@ -35,7 +33,9 @@ while opcao ~= 4
                 validate = input("\n  Vai sair do programa. Tem a certeza? (1 ou 0): ");
             end
             if validate
-                fprintf("\n\t Obrigado! Volte Sempre!!\n\n\n");
+                fprintf("\n  Obrigado! Volte Sempre!!\n\n\n");
+                pause(2);
+                clc;
                 break;
             else
                 opcao = 3;

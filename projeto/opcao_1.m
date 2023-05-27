@@ -5,13 +5,11 @@ function [Vs, Rs, RL, circuito_aberto, Td, Z0, ir_para_tarefa, reta_fonte, reta_
 clc;
 
 %a var persistent ficam local para a função. Ou seja, da próxima vez que
-%entrar nesta função, o valor das variáveis vai ser o mesmo de quando saí
+%entrar nesta função, o valor das variáveis vai ser o mesmo de quando sai
 
-%outra opção é fazer este código na função main, assim os valores ficam lá
-%sempre :)
 persistent Vs_p Rs_p RL_p Td_p Z0_p L_p v_p reta_fonte_p reta_carga_p circuito_aberto_p ir_para_tarefa_p;
 %ir_para_tarefa = 0;     % 1 - Tarefa A
-                        % 2 - Tarefa B
+                         % 2 - Tarefa B
 
 %inicialiar variáveis na 1a vez que corre
 if first_time
@@ -79,7 +77,7 @@ while opcao ~= 11
             end
         case 2
             reta_fonte_p = input('Escreva a reta da fonte não linear: ', 's');
-            ir_para_tarefa = 1;
+            ir_para_tarefa_p = 1;
         case 3
             Rs_p = -1;
             while Rs_p < 0 || ~isscalar(Rs_p)
@@ -100,7 +98,7 @@ while opcao ~= 11
             end
         case 6
             reta_carga_p = input('Escreva a reta da carga não linear: ', 's');
-            ir_para_tarefa = 1;
+            ir_para_tarefa_p = 1;
         case 7
             Td_p = -1;
             while Td_p < 0 || ~isscalar(Td_p)

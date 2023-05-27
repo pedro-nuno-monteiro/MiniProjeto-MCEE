@@ -17,7 +17,7 @@ while opcao ~= 4
         case 1
             [Vs, Rs, RL, circuito_aberto, Td, Z0, ir_para_tarefa, reta_fonte, reta_carga] = opcao_1(first_time_1);
             first_time_1 = false;
-        
+
         case 2
             [n_iteracoes, tolerancia] = opcao_2(first_time_2);
             first_time_2 = false;

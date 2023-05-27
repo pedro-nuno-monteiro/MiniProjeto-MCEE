@@ -1,92 +1,81 @@
-function [] = opcao_3(Vs, Rs, RL, circuito_aberto, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, tau)
+function opcao_3(Vs, Rs, RL, circuito_aberto, Td_ma, Z0, n_iteracoes, tolerancia, ir_para_tarefa, reta_fonte, reta_carga, tau)
 
 % função que é executada quando é escolhida
 % a 3a opção do menu
 
-% apresentar a seguinte info:
-% 1. parâmetros
-% 2. gráfico V(I) - figura 3
-% 3. gráfico da tensão na f3onte/carga
-% 4. gráfico da corrente na fonte/carga
-% 5. tabela com valores de tensão/corrente 
-% 6. tensão e corrente no ponto de operação
-
 clc;
 fprintf("\n******************** Método de Bergeron ********************\n");
 
-if ir_para_tarefa ~= 2
-    if (Vs == 0 || Rs == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_tarefa == 0   % confirmar valores
-        fprintf("\n\tAinda não acabou de definir a configuração do circuito.");
-        fprintf("\n\tEscolha uma das seguintes opções:");
-        fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
-        fprintf("\n\n\t\t Prima 2 - Utilizar a configuração predefinida\n");
-        fprintf("\n************************************************************")
+if (Vs == 0 || Rs == 0 || Td_ma == 0 || Z0 == 0 || n_iteracoes == 0) && ir_para_tarefa == 0   % confirmar valores
+    fprintf("\n\tAinda não acabou de definir a configuração do circuito.");
+    fprintf("\n\tEscolha uma das seguintes opções:");
+    fprintf("\n\n\t\t Prima 1 - Terminar a configuração");
+    fprintf("\n\n\t\t Prima 2 - Utilizar a configuração predefinida\n");
+    fprintf("\n************************************************************")
+
+    opcao = 0;
+    while opcao < 1 || opcao > 2 || ~isscalar(opcao)
+        opcao = input('\n\t Opção escolhida: ');
+    end
     
+    if opcao == 1
+        return
+    else
+        clc;
         opcao = 0;
+        fprintf("\n******************** Método de Bergeron ********************\n");
+        fprintf("\n\tQual das configurações pretende utilizar?");
+        fprintf("\n\n\t\t Opção 1:");
+        fprintf("\n\t\t\t\tVs = 75"); fprintf("\n\t\t\t\tRs = 100"); fprintf("\n\t\t\t\tRL = 200");
+        fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
+        fprintf("\n\t\t\t\tTolerância = 2");
+        
+        fprintf("\n\n\t\t Opção 2:");
+        fprintf("\n\t\t\t\tVs = 24"); fprintf("\n\t\t\t\tRs = 5"); fprintf("\n\t\t\t\tRL = 25");
+        fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
+        fprintf("\n\t\t\t\tTolerância = 2\n");
+        fprintf("\n************************************************************")
+
         while opcao < 1 || opcao > 2 || ~isscalar(opcao)
-            opcao = input('\n\t Opção escolhida: ');
+            opcao = input("\n\t Opção escolhida: ");
         end
         
         if opcao == 1
-            return
+            Vs = 75;
+            Rs = 100;
+            RL = 200;
+            Td_ma = 2e-3;
+            Z0 = 50;
+            n_iteracoes = 4;
+            tolerancia = 2;
         else
-            clc;
-            opcao = 0;
-            fprintf("\n******************** Método de Bergeron ********************\n");
-            fprintf("\n\tQual das configurações pretende utilizar?");
-            fprintf("\n\n\t\t Opção 1:");
-            fprintf("\n\t\t\t\tVs = 75"); fprintf("\n\t\t\t\tRs = 100"); fprintf("\n\t\t\t\tRL = 200");
-            fprintf("\n\t\t\t\tTd = 0.002"); fprintf("\n\t\t\t\tZ0 = 100"); fprintf("\n\t\t\t\tNúmero de iterações = 4");
-            fprintf("\n\t\t\t\tTolerância = 2");
-            
-            fprintf("\n\n\t\t Opção 2:");
-            fprintf("\n\t\t\t\tVs = 24"); fprintf("\n\t\t\t\tRs = 200"); fprintf("\n\t\t\t\tRL = 100");
-            fprintf("\n\t\t\t\tTd = 0.005"); fprintf("\n\t\t\t\tZ0 = 50"); fprintf("\n\t\t\t\tNúmero de iterações = 10");
-            fprintf("\n\t\t\t\tTolerância = 2\n");
-            fprintf("\n************************************************************")
-    
-            while opcao < 1 || opcao > 2 || ~isscalar(opcao)
-                opcao = input("\n\t Opção escolhida: ");
-            end
-            
-            if opcao == 1
-                Vs = 75;
-                Rs = 100;
-                RL = 200;
-                Td_ma = 2e-3;
-                Z0 = 50;
-                n_iteracoes = 4;
-                tolerancia = 2;
-            else
-                Vs = 24; 
-                Rs = 5; 
-                RL = 0; 
-                Z0 = 100; 
-                Td_ma = 5e-3; 
-                tolerancia = 2; 
-                n_iteracoes = 10;
-            end
+            Vs = 24; 
+            Rs = 5; 
+            RL = 25; 
+            Z0 = 100; 
+            Td_ma = 5e-3; 
+            tolerancia = 2; 
+            n_iteracoes = 10;
         end
     end
-    
-    clc;
-    fprintf("\n******************** Método de Bergeron *******************\n");
-    fprintf("\n\t Configuração definida: \n");
-    if ir_para_tarefa == 0
-        fprintf("\n\t Vs \t\t\t\t %d V", Vs);
-        fprintf("\n\t Rs \t\t\t\t %d %c", Rs, char(216));
-    elseif ir_para_tarefa == 1
-        fprintf("\n\t Reta da Fonte = %s", reta_fonte);
-        fprintf("\n\t Reta da Carga = %s", reta_carga);
-    end
-    fprintf("\n\t RL_CC \t\t\t\t %d %c", RL, char(216));
-    fprintf("\n\t Td \t\t\t\t %f s", Td_ma);
-    fprintf("\n\t Z0 \t\t\t\t %f %c", Z0, char(216));
-    fprintf("\n\t Número iterações \t %d", n_iteracoes);
-    fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
-    fprintf("\n***********************************************************\n");
-
 end
+
+clc;
+fprintf("\n******************** Método de Bergeron *******************\n");
+fprintf("\n\t Configuração definida: \n");
+if ir_para_tarefa == 0
+    fprintf("\n\t Vs \t\t\t\t %d V", Vs);
+    fprintf("\n\t Rs \t\t\t\t %d %c", Rs, char(216));
+elseif ir_para_tarefa == 1
+    fprintf("\n\t Reta da Fonte = %s", reta_fonte);
+    fprintf("\n\t Reta da Carga = %s", reta_carga);
+end
+fprintf("\n\t RL_CC \t\t\t\t %d %c", RL, char(216));
+fprintf("\n\t Td \t\t\t\t %f s", Td_ma);
+fprintf("\n\t Z0 \t\t\t\t %f %c", Z0, char(216));
+fprintf("\n\t Número iterações \t %d", n_iteracoes);
+fprintf("\n\t Tolerância \t\t %0.2f\n", tolerancia);
+fprintf("\n***********************************************************\n");
 
 % Método
 

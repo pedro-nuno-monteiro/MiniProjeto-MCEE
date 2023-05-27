@@ -1,4 +1,4 @@
-function [] = tarefa_B(Rs, RL, Td, Z0)
+function tarefa_B(Rs, RL, Td, Z0)
 
 %função que permite ao user definir o gráfico da fonte
 
@@ -167,9 +167,9 @@ switch grafico
             fprintf("\n***************** Trem de Impulsos *****************\n");
             fprintf("\n\t Parâmetros: ");
             fprintf("\n\n\t\t Prima 1 - Indique a amplitude | A = %d", A);
-            fprintf("\n\n\t\t Prima 2 - Indique a duração   | Tau = %d\n\n", tau);
-            fprintf("\n\n\t\t Prima 3 - Indique o período   | T = %d\n\n", T);
-            fprintf("\n\n\t\t Prima 4 - Número de impulsos  | N = %d\n\n", n_graficos);
+            fprintf("\n\n\t\t Prima 2 - Indique a duração   | Tau = %d", tau);
+            fprintf("\n\n\t\t Prima 3 - Indique o período   | T = %d", T);
+            fprintf("\n\n\t\t Prima 4 - Número de impulsos  | N = %d", n_graficos);
 
             while opcao < 1 || opcao > 4 || ~isscalar(opcao)
                 opcao = input("  Opção escolhida: ");
@@ -223,7 +223,7 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
             fprintf("\n\t Fonte de Alimentação:\n");
             fprintf("\n\t\t Prima 1 - Definir impedância da fonte | Rs = %d\n", Rs);
             fprintf("\n\t Impedância da Carga:\n");
-            fprintf("\n\t\t Prima 2 - Definir em curto circuito   | RL = %d", RL);
+            fprintf("\n\t\t Prima 2 - Definir resistência         | RL = %d", RL);
             fprintf("\n\t Linha de Transmissão:\n");
             fprintf("\n\t\t Prima 3 - Definir tempo de propagação | Td = %d", Td);
             fprintf("\n\t\t Prima 4 - Definir impedância de linha | Z0 = %d", Z0);
@@ -238,15 +238,18 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
         
             switch opcao
                 case 1
-                    Rs = input('Rs (\ohms) = ');
+                    Rs = input('Rs = ');
                 case 2
-                    RL = input('RL em CC (\ohms) = ');
+                    RL = input('RL = ');
                 case 3
                     Td = input('Td (s) = ');
                 case 4
-                    Z0 = input('Z0 (\ohms) = ');
+                    Z0 = input('Z0 = ');
                 case 5
-                    [L, v] = input('L (m), v (m/s) = ');
+                    valores = input('L(m), v(m/s) = ', 's');
+                    valores = strsplit(valores, ' ');
+                    L = str2double(valores{1});
+                    v = str2double(valores{2});
                     Td = L / v;
             end
         end
@@ -274,7 +277,7 @@ if Rs == 0 || RL == 0 || Td == 0 || Z0 == 0
         if opcao == 1
             Rs = 100; RL = 200; Td = 0.002; Z0 = 50; n_iteracoes = 4; tolerancia = 2;
         else
-            Rs = 200; RL = 100; Td = 0.005; Z0 = 50; n_iteracoes = 10; tolerancia = 2;
+            Rs = 5; RL = 25; Td = 0.005; Z0 = 100; n_iteracoes = 10; tolerancia = 2;
         end
     end
 
@@ -288,9 +291,47 @@ switch grafico
         plot(t, y, 'b', LineWidth = 2);
         xlim([-2 tau + 2]); ylim([-0.5 A + 2]);
         
-        ir_para_tarefa = 2;
-        opcao_3(A, Rs, RL, Td, Z0, n_iteracoes, tolerancia, ir_para_tarefa, [], [], tau);
-        return;
+        figure('Name', 'Diagrama V(I)', 'NumberTitle', 'off', 'ToolBar', 'none', 'MenuBar', 'none');
+        I = A/Rs;
+        x = linspace(0, I, 10000);
+        
+        % reta da fonte
+        f = @(x) A - Rs .* x;
+                
+        % gráfico da fonte
+        subplot(1, 3, 1);
+        grafico_fonte = plot(x, f(x), 'r', 'LineWidth', 2);
+        hold on;
+        
+        % reta da carga
+        c = @(x) RL .* x;
+        
+        % gráfico da carga
+        grafico_carga = plot(x, c(x), 'b', 'LineWidth', 2);
+        grid on;
+        title('Diagrama V(I)');
+        xlabel('Corrente (A)'); ylabel('Tensão (V)');
+        grid on;
+        
+        % ponto de operação
+        zero_x = fzero(@(x) f(x) - c(x), 2);
+        zero_y = f(zero_x);
+        
+        po = plot(zero_x, zero_y, 'o', 'MarkerFaceColor','k');
+        
+        xlabel('Corrente (A)'); ylabel('Tensao (V)');
+        legend([grafico_fonte, grafico_carga, po], {'Fonte', 'Carga', 'Ponto de operação'}, 'Location', 'best');
+
+        u = @(t) 1*(t>=0); % degrau
+        s = [];
+        for i= 1:length(amplitudes)
+        s = strcat(s, ['+' num2str(amplitudes(i), 4) '*u(t-' num2str(2*i-1) '*td)']);
+        end
+        s = strcat('@(t, td) ', s) % acrescenta o handle da função
+        f = eval(s); % converte a string numa função anónima
+        t = linspace(0, 55, 1000); % até 55 ms
+        TD = 5; % ms
+        plot(t, f(t, TD), 'linewidth', 2)
 
     case 2
     
@@ -331,13 +372,11 @@ switch grafico
         ylim([0 A + 10]);
         hold off;
 
-        %zero_x = fzero(@(x) f(x) - c(x), 2);
-        %zero_y = f(zero_x);
-        %po = plot(zero_x, zero_y, 'o', 'markerfacecolor','k');
     case 4
 
         figure('Name', 'Trem de Impulsos');
         plot(x, y, LineWidth = 2);
+        ylim([0 A + 2]);
         title('Trem de Impulsos');
 
         I = A / Rs;

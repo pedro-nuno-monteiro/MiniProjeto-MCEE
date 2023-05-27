@@ -9,8 +9,8 @@ clc;
 
 %outra opção é fazer este código na função main, assim os valores ficam lá
 %sempre :)
-persistent Vs_p Rs_p RL_p Td_p Z0_p L_p v_p reta_fonte_p reta_carga_p circuito_aberto_p;
-ir_para_tarefa = 0;     % 1 - Tarefa A
+persistent Vs_p Rs_p RL_p Td_p Z0_p L_p v_p reta_fonte_p reta_carga_p circuito_aberto_p ir_para_tarefa_p;
+%ir_para_tarefa = 0;     % 1 - Tarefa A
                         % 2 - Tarefa B
 
 %inicialiar variáveis na 1a vez que corre
@@ -25,6 +25,7 @@ if first_time
     v_p = 0;
     reta_fonte_p = 0;
     reta_carga_p = 0;
+    ir_para_tarefa_p = 0;
 end
 
 opcao = 0;  %tem de ser inicializada sempre por isso fica fora
@@ -54,7 +55,7 @@ while opcao ~= 11
     fprintf("\n\t\t Prima 9 - ou definir comprimento e velocidade de propagação | L = %d | v = %d\n", L_p, v_p);
     
     fprintf("\n\t Prima 10 - Utilizar um dos gráficos da tarefa B | Opção atual: ");
-    if ir_para_tarefa == 2
+    if ir_para_tarefa_p == 2
         fprintf("Sim");
     else
         fprintf("Não");
@@ -119,10 +120,10 @@ while opcao ~= 11
             v_p = str2double(valores{2});
             Td_p = L_p / v_p;
         case 10
-            if ir_para_tarefa == 0 || ir_para_tarefa == 1
-                ir_para_tarefa = 2;
+            if ir_para_tarefa_p == 0 || ir_para_tarefa_p == 1
+                ir_para_tarefa_p = 2;
             else
-                ir_para_tarefa = 0;
+                ir_para_tarefa_p = 0;
             end
                 
         case 11
@@ -131,6 +132,7 @@ while opcao ~= 11
             Rs = Rs_p;
             RL = RL_p;
             circuito_aberto = circuito_aberto_p;
+            ir_para_tarefa = ir_para_tarefa_p;
             Td = Td_p;
             Z0 = Z0_p;
             reta_fonte = reta_fonte_p;
@@ -144,6 +146,7 @@ while opcao ~= 11
     Vs = Vs_p;
     Rs = Rs_p;
     RL = RL_p;
+    ir_para_tarefa = ir_para_tarefa_p;
     circuito_aberto = circuito_aberto_p;
     Td = Td_p;
     Z0 = Z0_p;
